@@ -3,6 +3,13 @@
         <div class="ms-title">汇众互联融资租赁业务管理系统</div>
         <div class="ms-login">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
+                 <div>
+                     
+                    <el-select label="角色">
+                        <el-option label="管理员" value="1"></el-option>
+                        <el-option label="操作员" value="2"></el-option>
+                    </el-select>
+                </div>
                 <el-form-item prop="username">
                     <el-input v-model="ruleForm.username" placeholder="用户名"></el-input>
                 </el-form-item>
@@ -11,6 +18,19 @@
                 </el-form-item>
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                </div>
+
+                <div>
+                <table border="0" height="60px">
+                    <tr>
+                        <el-form-item prop="accesscode">
+                        <el-input type="text" placeholder="随机码" v-model="ruleForm.accesscode" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                         </el-form-item>
+                        <td><p style="width: 20px;"></p></td>
+                                    <td> <img src="http://localhost:8080/console/getImageCode" alt="" id="captcha1" onclick="refreshCaptcha()" style="height: 40px; width: 100%; vertical-align: middle;">
+                        </td>
+                    </tr>
+                </table>
                 </div>
                 <p style="font-size:12px;line-height:30px;color:#999;">Tips : {{tips}}</p>
             </el-form>
@@ -26,7 +46,8 @@
                 tips:'请填写正确的用户名和密码登录。',
                 ruleForm: {
                     username: '',
-                    password: ''
+                    password: '',
+                    accesscode:''
                 },
                 rules: {
                     username: [
@@ -34,6 +55,9 @@
                     ],
                     password: [
                         { required: true, message: '请输入密码', trigger: 'blur' }
+                    ],
+                    accesscode: [
+                        { required: true, message: '输入随机码', trigger: 'blur' }
                     ]
                 }
             }
@@ -43,15 +67,16 @@
                 const self = this;
                 let params = {
                     userName: self.ruleForm.username,
-                    password: self.ruleForm.password
+                    password: self.ruleForm.password,
+                    accesscode: self.ruleForm.accesscode
                 };
-
+                console.log("cookie:"+document.cookie)
                 this.$http.post(this.$global.remote().login, params, response => {
                     localStorage.Authorization = response.result.Authorization;
                     console.log(response.result)
                     this.getUserInfo();
                     //添加路由
-                    //alertMsg("未找到用户")
+                    
                 },fail =>{
                     self.tips = fail.message;
                 });
@@ -112,7 +137,7 @@
         left:50%;
         top:50%;
         width:300px;
-        height:160px;
+        height:300px;
         margin:-150px 0 0 -190px;
         padding:40px;
         border-radius: 5px;

@@ -1,8 +1,8 @@
 <template>
     <div class="header">
-        <div class="logo">后台管理系统</div>
+        <div class="logo">汇众互联融资租赁业务管理系统</div>
         <div class="login-name"><span>登录人:</span>&nbsp;<span>{{currUserName}}</span></div>
-        <div class="login-name"><span>当前部门:</span>&nbsp;<span>{{currDeptName}}</span></div>
+        <!--<div class="login-name"><span>当前部门:</span>&nbsp;<span>{{currDeptName}}</span></div>-->
         <div class="user-info">
             <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
@@ -93,12 +93,12 @@
     }
     .header .logo{
         float: left;
-        width:250px;
+        width:500px;
         text-align: center;
     }
     .user-info {
         float: right;
-        padding-right: 75px;
+        padding-right: 10px;
         font-size: 16px;
         color: #fff;
     }
@@ -125,8 +125,10 @@
         margin-top:-5px;
     }
     .login-name{
-        float: left;
+        float: right;
+        padding-right: 10px;
         font-size:18px;
+        vertical-align: middle;
     }
     .login-name>span:nth-child(1){
         font-weight: bold;

@@ -2,27 +2,13 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-setting"></i> 自述</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-setting"></i> 首页</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="ms-doc">
-            <h3>README.md</h3>
-            <article>
-                
-                <h2>功能</h2>
-                <p>
-                    系统设计了管理系统比较通用的几个模块
-                </p>
-                <ul>
-                    <li>用户管理</li>
-                    <li>角色管理</li>
-                    <li>菜单管理</li>
-                    <li>内容管理</li>
-                    
-                </ul>
-            </article>
-        </div>
+        
+        <div class="1">
 
+        </div>
     </div>
 </template>
 
