@@ -1,0 +1,1 @@
+java -jar ifarm-console-exec.jar
