@@ -82,8 +82,21 @@ INSERT INTO `t_console_permission` VALUES (28, 7, '/user/distributeRole', '分�
 INSERT INTO `t_console_permission` VALUES (29, 8, '/resource/distributePermission', '分配权限', 1, '2018-05-08 14:44:14');
 INSERT INTO `t_console_permission` VALUES (30, 5, '/terms/code/list', '查询', 1, '2018-05-11 23:33:02');
 INSERT INTO `t_console_permission` VALUES (31, 6, '/terms/value/list', '查询', 1, '2018-05-11 23:33:23');
-INSERT INTO `t_console_permission` VALUES (32, 301, '/expenseVelocity/list', '查询', 1, '2018-05-11 23:33:23');
-
+INSERT INTO `t_console_permission` VALUES (3011, 301, '/expenseVelocity/read', '查询', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3012, 301, '/expenseVelocity/edit', '编辑', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3013, 301, '/expenseVelocity/excelEI', 'Excel导入导出', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3021, 302, '/kunpengBussiness/read', '查询', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3022, 302, '/kunpengBussiness/edit', '编辑', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3023, 302, '/kunpengBussiness/excelEI', 'Excel导入导出', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3031, 303, '/xinshengBussiness/read', '查询', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3032, 303, '/xinshengBussiness/edit', '编辑', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3033, 303, '/xinshengBussiness/excelEI', 'Excel导入导出', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3041, 304, '/zhideContractDownload/read', '查询', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3042, 304, '/zhideContractDownload/edit', '编辑', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3043, 304, '/zhideContractDownload/excelEI', 'Excel导入导出', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3051, 305, '/BussinessStat/read', '查询', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3052, 305, '/BussinessStat/edit', '编辑', 1, '2018-05-11 23:33:23');
+INSERT INTO `t_console_permission` VALUES (3053, 305, '/BussinessStat/excelEI', 'Excel导入导出', 1, '2018-05-11 23:33:23');
 -- ----------------------------
 -- Table structure for t_console_resource
 -- ----------------------------
@@ -141,8 +154,50 @@ CREATE TABLE `t_console_role`  (
 -- ----------------------------
 -- Records of t_console_role
 -- ----------------------------
-INSERT INTO `t_console_role` VALUES (1, 'admin', 'admin', NULL, 'Y', '2018-04-14 20:12:16', '2018-04-14 20:12:19');
-INSERT INTO `t_console_role` VALUES (3, 'user', 'user', '', 'Y', '2018-04-30 21:34:36', '2018-04-30 21:36:17');
+INSERT INTO `t_console_role` VALUES (1, 'admin', '管理员用户', NULL, 'Y', '2018-04-14 20:12:16', '2018-04-14 20:12:19');
+INSERT INTO `t_console_role` VALUES (3, 'user', '普通用户', '', 'Y', '2018-04-30 21:34:36', '2018-04-30 21:36:17');
+
+
+-- ----------------------------
+-- Table structure for t_console_user_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `t_console_user_permission`;
+CREATE TABLE `t_console_user_permission`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NULL DEFAULT NULL,
+  `permission_id` int(11) NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 126 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+INSERT INTO `t_console_user_permission` VALUES (1001, 1, 3011, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1002, 1, 3012, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1003, 1, 3013, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1004, 1, 3021, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1005, 1, 3022, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1006, 1, 3023, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1007, 1, 3031, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1008, 1, 3032, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1009, 1, 3033, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1010, 1, 3041, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1011, 1, 3042, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1012, 1, 3043, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1013, 1, 3051, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1014, 1, 3052, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1015, 1, 3053, '2018-05-12 09:27:20');
+
+--
+-- user start from 1000，001 to 9999，001， total 9000 users
+INSERT INTO `t_console_user_permission` VALUES (1000001, 2, 3011, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000002, 2, 3012, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000003, 2, 3021, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000004, 2, 3022, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000005, 2, 3031, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000006, 2, 3032, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000007, 2, 3041, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000008, 2, 3042, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000009, 2, 3051, '2018-05-12 09:27:20');
+INSERT INTO `t_console_user_permission` VALUES (1000010, 2, 3052, '2018-05-12 09:27:20');
+
 
 
 -- ----------------------------
@@ -250,6 +305,22 @@ CREATE TABLE `t_console_user_role`  (
 -- ----------------------------
 INSERT INTO `t_console_user_role` VALUES (6, 1, 1, '2018-05-08 17:01:08');
 INSERT INTO `t_console_user_role` VALUES (7, 2, 3, '2018-05-10 22:41:41');
+
+
+-- -----------------------------
+-- Common Terms used by SYSTEM
+-- -----------------------------
+-- ----------------------------
+-- Table structure for t_data_systemterm
+-- ----------------------------
+DROP TABLE IF EXISTS `t_data_systemterm`;
+CREATE TABLE `t_data_systemterm`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `termtype` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'termtype',
+  `termsvalue` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'termvalue',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_terms_code`(`terms_code`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 
 -- ----------------------------

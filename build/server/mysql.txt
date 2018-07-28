@@ -1,0 +1,20 @@
+﻿1.安装mysql 
+2.打开mysql console
+切换到myslq目录
+如下
+C:\tools\mysql-5.7.22-winx64\bin>mysql -u root -p
+输入密码进入如下提示符
+mysql>
+3.创建数据库
+mysql>
+
+CREATE DATABASE zst CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+4.修改utf8字符集
+mysql>
+SET CHARACTER SET utf8
+
+5.运行build/server下的 webconsole.sql
+在mysql 提示符下
+mysql>
+source C:\projects\ninepages\ifarm\ifarm-console\webconsole.sql
