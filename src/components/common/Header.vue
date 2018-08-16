@@ -1,6 +1,8 @@
 <template>
     <div class="header">
-        <div class="logo">汇众互联融资租赁业务管理系统</div>
+
+        <img class="logoimage" src="../../assets/inLOGO.png"/>
+        <div class="logo">汇聚互联融资租赁业务管理系统</div>
         <div class="login-name"><span>登录人:</span>&nbsp;<span>{{currUserName}}</span></div>
         <!--<div class="login-name"><span>当前部门:</span>&nbsp;<span>{{currDeptName}}</span></div>-->
         <div class="user-info">
@@ -10,17 +12,82 @@
                 </span>
                 <el-dropdown-menu slot="dropdown" placement="top-end">
                     <el-dropdown-item command="logout">退出</el-dropdown-item>
-                    <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
+                  <!--  <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>-->
                     <el-dropdown-item command="updatePassword">修改密码</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
         <div class="headerTimer">
         </div>
+         <el-dialog title="重置密码" width="500px" :visible.sync ="changePasswordVisable" :close-on-click-modal="false">
+        <el-form :model="addForm"  status-icon label-width="80px" :rules="addFormRules" ref="addForm" >
+           <el-form-item label="新密码" prop="p1" >
+            <el-input type="password" v-model="addForm.p1" auto-complete="off"></el-input>
+          </el-form-item>
+           <el-form-item label="重复输入" prop="p2" >
+            <el-input type="password" v-model="addForm.p2" auto-complete="off"></el-input>
+          </el-form-item>
+        
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+          <el-button @click.native="changePasswordVisable = false">取消</el-button>
+           <el-button @click="resetForm('addForm')">重置</el-button>
+          <el-button type="primary" @click.native="addSubmitPassword" :loading="addLoading">提交</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 <script>
     export default {
+        data(){
+            let validatePass = (rule,value, callback) => {
+               
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.addForm.repassword !== '') {
+            this.$refs.addForm.validateField('repassword');
+          }
+          callback();
+        }
+      };
+      let validatePass2 = (rule, value, callback) => {
+          
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.addForm.p1) {
+           
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+            
+            
+      return {
+        
+          addForm:
+          {
+              p1:'',
+              p2:''
+          },
+          changePasswordVisable:false,
+          addFormRules:
+          {
+           
+            p1: [
+            {  required:true,validator: validatePass,  trigger: 'blur'    }
+                     ],
+           p2: [
+            {
+                required:true,validator: validatePass2,
+                trigger:'blur'
+                }
+                    ],
+          }
+      }
+        },
         computed:{
             currUserName(){
                 return this.getUserInfo().userName;
@@ -30,6 +97,30 @@
             }
         },
         methods:{
+
+           resetForm(form)
+           {
+                this.$refs[form].resetFields();
+           },
+            addSubmitPassword()
+            {
+                console.log("enter addsubmitpassword")
+                        this.$refs.addForm.validate((valid) => {
+                if (valid) {
+                    
+                    this.changePasswordVisable = false
+
+                } else {
+                   
+                    this.$message("输入有错")
+                    return false;
+                }
+                });
+               
+
+                // this.changePasswordVisable=false;
+
+            },
             getUserInfo(){
                 // return JSON.parse(this.$cookie.get('userInfo'));
                 return JSON.parse(sessionStorage.getItem('userInfo'));
@@ -48,6 +139,10 @@
                 } else if (command == 'userInfo') {
 
                 } else if (command == 'updatePassword'){
+                    console.log("call change password")
+                    this.addForm.password = ''
+                    this.addForm.repassword = ''
+                    this.changePasswordVisable = true;
 
                 }
 
@@ -58,12 +153,16 @@
                 // this.$cookie.set('userMenu','',-1);
                 sessionStorage.removeItem('userInfo');
                 sessionStorage.removeItem('userMenu');
+                localStorage.Authorization = ''
+                
             },
             clearStore : function(){
                 this.$store.commit("clearStore");
             },
             autoTime(){
                 var timeEle=document.querySelector('.headerTimer');
+                if(timeEle === null ||timeEle === undefined)
+                    console.log("error happened for autotime")
                 setInterval(function () {
                     let time=new Date();
                     var year=time.getFullYear();
@@ -77,7 +176,8 @@
             }
         },
         mounted:function () {
-            this.autoTime();
+           // this.autoTime();
+        
         }
     }
 </script>
@@ -95,6 +195,16 @@
         float: left;
         width:500px;
         text-align: center;
+    }
+    .header .logoimage
+    {
+        float: left;
+        padding-left: 30px;
+        padding-top:20px;
+        top: 60px;
+        width: 130px;
+        height: 30px;
+        
     }
     .user-info {
         float: right;

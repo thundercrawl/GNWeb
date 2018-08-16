@@ -15,7 +15,8 @@
     import headerTab from './headerTab.vue';
     export default {
         components:{
-            vHead, vSidebar,headerTab
+            vHead,vSidebar,headerTab,
         }
+        
     }
 </script>

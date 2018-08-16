@@ -1,26 +1,102 @@
 <template>
-    <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-setting"></i> 首页</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        
-        <div class="1">
+     <el-row class="warp">
+          
+    <el-col :span="24" class="warp-breadcrum">
+      <el-breadcrumb separator="/">
+      <!--  <el-breadcrumb-item :to="{ path: '/home/index' }"><b>首页</b></el-breadcrumb-item>-->
+      </el-breadcrumb>
+    </el-col>
 
-        </div>
-    </div>
+    <el-col :span="24" class="warp-main">
+      <section class="chart-container">
+        <el-row>
+          <el-col :span="8">
+           
+              <img src="../assets/fundefficient.png" class="image" @click="changePage('fundefficient')" />
+             
+            
+          </el-col>
+          <el-col :span="8">
+            
+              <img src="../assets/kunpeng.png" class="image" @click="changePage('kunpeng')">
+              
+         
+          </el-col>
+          <el-col :span="8">
+            
+              <img src="../assets/dingsheng.png" class="image" @click="changePage('dingsheng')">
+           
+          </el-col>
+          
+        </el-row>
+        
+        <el-row>
+          <el-col :span="8">
+           
+              <img src="../assets/contract.png" class="image" @click="changePage('zhide')">
+              
+         
+          </el-col>
+
+           <el-col :span="8">
+            
+              <img src="../assets/buss.png" class="image" @click="changePage('bussstat')">
+              
+            
+          </el-col>
+        </el-row>
+      </section>
+
+    </el-col>
+</el-row>
 </template>
 
 <script>
     export default {
         data: function(){
             return {}
+        
         }
     }
 </script>
 
 <style scoped>
+    .time {
+    font-size: 13px;
+    color: #999;
+  }
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
+  .image {
+    padding:2px;
+    width: 60%;
+    
+  }
+  .image:hover{
+    padding:0px;
+    opacity: 1;
+    }
+    
+  image:hover {
+      opacity: 1;
+      background-color:yellow;
+    }
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+  .chart-container {
+    width: 100%;
+  }
+  .chart-container .el-col {
+    padding: 30px 20px;
+  }
     .ms-doc{
         width:100%;
         max-width: 980px;
@@ -68,3 +144,24 @@
 
 
 </style>
+<script>
+export default {
+        data: function(){
+            return {
+              fundpage:''
+              
+            }
+        },
+        methods: 
+        {
+          changePage:function(pagename)
+          {
+            console.log("pagename:"+pagename)
+            this.$router.push("/home/"+pagename)
+            
+          }
+
+        }
+}
+
+</script>

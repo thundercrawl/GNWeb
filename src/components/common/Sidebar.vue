@@ -1,14 +1,15 @@
 <template>
     <div class="sidebar">
-        <el-menu :default-active="onRoutes" @open="handleOpen" class="el-menu-vertical-demo" background-color="#324157" text-color="#fff"
-                 unique-opened router>
-            <template v-for="(item, k) in menusCopy.menuData">
-                <el-submenu :index="item.resourceCode"><!--二级菜单-->
-                    <template slot="title"><i :class="item.nodeIcon"></i>{{ item.resourceName }}</template>
-                    <el-menu-item v-for="(subItem,i) in item.menuItems" :key="i" :index="subItem.router" >{{ subItem.resourceName }}
-                    </el-menu-item>
-                </el-submenu>
-            </template>
+      
+        
+        <el-menu  class="el-menu-vertical-demo" background-color="#324157" text-color="#fff">
+            
+        
+            <el-menu-item  v-if="this.$global.haveUserPermissionNotRole('/UserMgr')" @click="change">
+            <template slot="title"><i class="iconfont icon-users"></i><span class="iconfont" @click="change"> 成员管理</span></template>
+            </el-menu-item>
+        
+            
         </el-menu>
     </div>
 
@@ -16,18 +17,24 @@
 
 <script>
     import RouterUtils from '../../tools/RouterUtils';
+    import '../../assets/iconfont.css'
     export default {
         data(){
           return {
               menus: [{
                   version: 1,
-                  menuData: []
+                  menuData: [],
+                  fixData: ['成员管理']
               }],
               menuIndex: new Map(),
               menuCache: new Map(),
           }
         },
         methods: {
+            change:function(){
+                this.$router.push("/home/UserManage")
+            }
+        ,
             handleOpen(index, indexPath){
                 let subMenu = this.menuCache.get(index);
                 let subMenuIndex = this.menuIndex.get(index);
@@ -70,7 +77,12 @@
         },
         watch:{
         },
+       
         mounted(){
+
+        
+           
+        
             let menusTemp = this.$store.state.userMenu;
             for (let i = 0, len = menusTemp.length; i < len; i++){
                 menusTemp[i].menuItems = [];
@@ -82,10 +94,11 @@
 </script>
 
 <style>
+    
     .sidebar {
         display: block;
         position: absolute;
-        width: 250px;
+        width: 180px;
         left: 0;
         top: 70px;
         bottom: 0;
@@ -100,4 +113,7 @@
         height: 45px !important;
         line-height: 45px !important;
     }
+     .el-menu-item:hover, .el-submenu .el-menu-item:hover, .el-submenu__title:hover {
+        background-color: #7ed2df;
+      }
 </style>

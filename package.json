@@ -10,9 +10,9 @@
         "build:dll": "webpack --config build/webpack.dll.conf.js"
     },
     "dependencies": {
-        "axios": "^0.15.3",
+        "axios": "^0.18.0",
         "babel-polyfill": "^6.23.0",
-        "element-ui": "^2.3.3",
+        "element-ui": "^2.4.6",
         "vue": "^2.5.2",
         "vue-cookie": "^1.1.4",
         "vue-core-image-upload": "2.1.11",
@@ -21,6 +21,7 @@
         "vue-router": "^3.0.1",
         "vue-schart": "^0.1.2",
         "vue-simplemde": "0.3.8",
+        "vue-validator": "^3.0.0-alpha.2",
         "vuex": "^3.0.1"
     },
     "devDependencies": {

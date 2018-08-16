@@ -1,15 +1,70 @@
 import apiAxios from '../apiaxios';
-import {Message} from 'element-ui';
+import { Message } from 'element-ui';
 import tools from '../tools';
 
 const global = {}
 global.menuStore = new Array();
 
+global.componentSelect = {
+    name: ''
+}
+global.dateColumn = {
+    yearvalue: '',
+    monthvalue: ''
+}
 global.remoteUrl = {
+    //bussstat
+    bussstatList: '/businessStat/list',
+    bussstatListByMonth: '/businessStat/listbyMonth',
+    //dingsheng
+    dingshengCityInsert: '/dingSheng/city/insert',
+    dingshengCityList: '/dingSheng/city/list',
+    dingshengCompanyInsert: '/dingSheng/company/insert',
+    dingshengCompanyList: '/dingSheng/company/list',
+    dingshengCartypeInsert: '/dingSheng/cartype/insert',
+    dingshengCartypeList: '/dingSheng/cartype/list',
+    dingshengInsert: '/dingSheng/insert',
+    dingshengList: '/dingSheng/list',
+    dingshengDelete: '/dingSheng/delete',
+    dingshengUpdate: '/dingSheng/update',
+    dingshengListByMonth: '/dingSheng/listbyMonth',
+    //kunpeng
+    kunpengCityInsert: '/kunPeng/city/insert',
+    kunpengCityList: '/kunPeng/city/list',
+    kunpengCompanyInsert: '/kunPeng/company/insert',
+    kunpengCompanyList: '/kunPeng/company/list',
+    kunpengCartypeInsert: '/kunPeng/cartype/insert',
+    kunpengCartypeList: '/kunPeng/cartype/list',
+    kunpengInsert: '/kunPeng/insert',
+    kunpengList: '/kunPeng/list',
+    kunpengDelete: '/kunPeng/delete',
+    kunpengUpdate: '/kunPeng/update',
+    kunpengListByMonth: '/kunPeng/listbyMonth',
+    //zhide
+    zhideContractInsert: '/zhideContract/insert',
+    zhideContractList: '/zhideContract/list',
+    zhideContractUpdate: '/zhideContract/update',
+    zhideContractDelete: '/zhideContract/delete',
+    zhideContractUpload: '/zhideContract/updateData',
+    zhideContractExport: '/zhideContract/exportData',
+    zhideTid: '',
+
+    //fund efficient
+    fundEfficientListByMonth: '/fundEfficient/listbyMonth',
+    fundEfficientInsert: '/fundEfficient/insert',
+    fundEfficientDelete: '/fundEfficient/delete',
+    fundEfficientUpdate: '/fundEfficient/update',
+
+    fundEfficientCompanyInsert: '/fundEfficient/company/insert',
+    fundEfficientCompanyList: '/fundEfficient/company/list',
+    //
+    userPermissionNotRoleBased: '/userPermissionNotRole',
+    cookie: '/cookie',
+    accessCode: '/getImageCode',
     login: '/login',
     logout: '/logout',
     //user manage
-    userMenu:'/userMenu',
+    userMenu: '/userMenu',
     userInfo: '/userInfo',
     userPermission: '/userPermission',
     userList: '/user/list',
@@ -64,12 +119,12 @@ let loadDictionary = function() {
         let termsCodeMap = new Map();
         let termsCodes = new Array();
         let dataArr = response.result.termsCodeDTOS;
-        for(let i = 0; i < dataArr.length; i++) {
+        for (let i = 0; i < dataArr.length; i++) {
             dictionary.set(dataArr[i].termsCode, dataArr[i].termsValues);
             termsCodeMap.set(dataArr[i].termsCode, dataArr[i].termsName);
             termsCodes.push({
-                termsCode:dataArr[i].termsCode,
-                termsName:dataArr[i].termsName
+                termsCode: dataArr[i].termsCode,
+                termsName: dataArr[i].termsName
             })
         }
         global.dictionary = dictionary;
@@ -89,7 +144,7 @@ let loadMenuSelectStore = function() {
     })
 }
 
-let loadRoleStore = function () {
+let loadRoleStore = function() {
     apiAxios.get(global.remoteUrl.findAllRole, null, response => {
         let roles = response.result;
         let roleStore = [];
@@ -108,9 +163,9 @@ let loadRoleStore = function () {
     })
 }
 
-let loadUserPermission = function () {
+let loadUserPermission = function() {
     let userName = JSON.parse(sessionStorage.getItem('userInfo')).userName;
-    apiAxios.get(global.remoteUrl.userPermission, {userName:userName}, response => {
+    apiAxios.get(global.remoteUrl.userPermission, { userName: userName }, response => {
         let store = {};
         if (tools.isNotEmpty(response.result)) {
             store = response.result;
@@ -121,7 +176,24 @@ let loadUserPermission = function () {
     })
 };
 
-let loadDistributeResourceStore = function () {
+let loadUserPermissionNotRole = function() {
+
+    const self = this;
+    let params = {
+        userName: JSON.parse(sessionStorage.getItem('userInfo')).userName,
+    };
+    apiAxios.get("/userPermissionNotRole", params, response => {
+        console.log("get user permission not rolebased")
+        if (tools.isNotEmpty(response.result)) {
+            let userPermission = response.result;
+            global.userPermissionNotRole = userPermission;
+            console.log("get user permission:" + userPermission)
+        }
+    }, fail => {
+        Message.error(fail.message);
+    })
+};
+let loadDistributeResourceStore = function() {
     apiAxios.get(global.remoteUrl.findAllDistributeResource, null, response => {
         let store = {};
         if (tools.isNotEmpty(response.result)) {
@@ -131,28 +203,52 @@ let loadDistributeResourceStore = function () {
     }, fail => {
         Message.error(fail.message);
     })
+};
+
+let loadkunpengCity = function(that) {
+    apiAxios.get(global.remoteUrl.kunpengCityList, null, response => {
+        let store = {};
+        if (tools.isNotEmpty(response.result)) {
+            store = response.result;
+        }
+        global.kunpengCity = JSON.parse(JSON.stringify(store));
+        //console.log("kun peng city:" + global.kunpengCity[0].city)
+        that.kunpentcitySelectCities = global.kunpengCity
+
+    }, fail => {
+        Message.error(fail.message);
+    })
+    console.log("end of loadkunpengcity, global.kunpengCity:" + global.kunpengCity)
 }
 
+
+
 export default {
-    remote(){
+    remote() {
         return global.remoteUrl;
     },
-    autoFlashDictionary: function(){
-        setInterval(loadDictionary(),10 * 60 * 1000);
+    dateColumn() {
+        return global.dateColumn;
     },
-    flashDictionary : function () {
+    componentSelect() {
+        return global.componentSelect;
+    },
+    autoFlashDictionary: function() {
+        setInterval(loadDictionary(), 10 * 60 * 1000);
+    },
+    flashDictionary: function() {
         loadDictionary();
     },
-    flashMenuSelectStore: function () {
+    flashMenuSelectStore: function() {
         loadMenuSelectStore();
     },
-    getTermsCodeMap : function () {
+    getTermsCodeMap: function() {
         return global.termsCodeMap;
     },
-    getTermsCodeStore: function () {
+    getTermsCodeStore: function() {
         return global.termsCodes;
     },
-    getTermsValueStore: function (termsCode) {
+    getTermsValueStore: function(termsCode) {
         if (tools.isEmpty(termsCode)) {
             return [];
         }
@@ -175,7 +271,7 @@ export default {
             return null;
         }
         let values = this.getTermsValueStore(termsCode);
-        for (let i = 0, len = values.length; i < len; i++){
+        for (let i = 0, len = values.length; i < len; i++) {
             if (valueCode == values[i].valueCode) {
                 return values[i].valueName;
             }
@@ -190,10 +286,10 @@ export default {
         }
         return value;
     },
-    getMenuCodeValueStore(){
+    getMenuCodeValueStore() {
         return global.menuStore;
     },
-    flashRoleStore(){
+    flashRoleStore() {
         loadRoleStore();
     },
     getRoleStore() {
@@ -208,14 +304,72 @@ export default {
     flashUserPermission() {
         loadUserPermission();
     },
+    flashUserPermissionNotRole() {
+        loadUserPermissionNotRole();
+    },
     setUserPermissions(userPermissions) {
         global.userPermission = userPermissions;
+    },
+    setUserPermissionNotRole(p) {
+        global.userPermissionNotRole = p;
+    },
+    haveUserPermissionNotRole: function(path) {
+        const self = this;
+        /*
+        let params = {
+            userName: JSON.parse(sessionStorage.getItem('userInfo')).userName,
+        };
+        
+        apiAxios.get("/userPermissionNotRole", params, response => {
+            console.log("get user permission not rolebased")
+            if (tools.isNotEmpty(response.result)) {
+                let userPermission = response.result;
+                global.userPermissionNotRole = userPermission;
+                console.log("get user permission:" + userPermission)
+                global.tempGranted = false;
+                
+
+
+            }
+        }, fail => {
+            Message.error(fail.message);
+        })*/
+        let key = ''
+        global.tempGranted = false;
+        for (key in global.userPermissionNotRole) {
+            if (((String)(global.userPermissionNotRole[key])).indexOf(path) >= 0) {
+                console.log("permission granted for path:" + path)
+                global.tempGranted = true;
+
+            }
+
+        }
+
+        console.log("path:" + path)
+        console.log("user permission is:" + global.userPermissionNotRole)
+        console.log("return granted privilledge:" + global.tempGranted);
+        return global.tempGranted;
     },
     getUserPermissions() {
         if (tools.isEmpty(global.userPermission)) {
             loadUserPermission();
         }
         return global.userPermission;
-    }
+    },
+    getUserPermissionsNotRole() {
+        if (tools.isEmpty(global.userPermissionNotRole)) {
+            loadUserPermissionNotRole();
+        }
+        return global.userPermissionNotRole;
+    },
+
+    getKunPengCity(that) {
+        if (tools.isEmpty(global.kunpengCity)) {
+            loadkunpengCity(that);
+        }
+        console.log("kunpengCity:" + global.kunpengCity)
+
+    },
+
 
 }

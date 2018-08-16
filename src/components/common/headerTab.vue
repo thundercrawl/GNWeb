@@ -83,12 +83,14 @@
 
             }
         },
+        
         mounted(){
             //初始加载的是模块 不需要router
             // if (this.$tools.isEmpty(sessionStorage.getItem('isAddRouters'))) {
             //     this.reAddRouter();
             //     sessionStorage.setItem('isAddRouters', 'true');
             // }
+            
             this.$store.commit('addTabs',{route: '/home/index', name: '首页'});
             //延迟3s加载数据字典
             // setTimeout(function () {
@@ -97,6 +99,8 @@
                 this.$global.flashRoleStore();
                 this.$global.flashDistributeStore();
                 this.$global.flashUserPermission();
+                this.$global.flashUserPermissionNotRole();
+                
             // }, 3000);
         }
     }
@@ -106,5 +110,11 @@
         div.el-tabs__nav>div.el-tabs__item:nth-child(1) span{
             display: none !important;
         }
-    }
+    };
+    
+.el-tabs__item{
+     font-size: 20px;
+    color: #aeafb1;
+    font: Arial
+}   
 </style>
