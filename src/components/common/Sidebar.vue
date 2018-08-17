@@ -5,7 +5,7 @@
         <el-menu  class="el-menu-vertical-demo" background-color="#324157" text-color="#fff">
             
         
-            <el-menu-item  v-if="this.$global.haveUserPermissionNotRole('/UserMgr')" @click="change">
+            <el-menu-item :disabled="isEnabled" v-if="!isEnabled"  @click="change">
             <template slot="title"><i class="iconfont icon-users"></i><span class="iconfont" @click="change"> 成员管理</span></template>
             </el-menu-item>
         
@@ -17,7 +17,10 @@
 
 <script>
     import RouterUtils from '../../tools/RouterUtils';
-    import '../../assets/iconfont.css'
+    import '../../assets/iconfont.css';
+    import apiAxios from '../../apiaxios';
+    import tools from '../../tools';
+    import config from '../../config.js'
     export default {
         data(){
           return {
@@ -28,6 +31,7 @@
               }],
               menuIndex: new Map(),
               menuCache: new Map(),
+              isEnabled:false,
           }
         },
         methods: {
@@ -81,8 +85,25 @@
         mounted(){
 
         
-           
-        
+          // this.isEnabled =  !this.$global.haveUserPermissionNotRole('/UserMgr');
+            const self = this;
+    let params = {
+        userName: JSON.parse(sessionStorage.getItem('userInfo')).userName,
+    };
+    apiAxios.get(config.serviceUrl+"/userPermissionNotRole", params, response => {
+        console.log("get user permission not rolebased")
+        if (tools.isNotEmpty(response.result)) {
+            let userPermission = response.result;
+            this.$global.setUserPermissionNotRole(userPermission) ;
+            console.log("get user permission:" + userPermission)
+            
+            this.isEnabled = !this.$global.haveUserPermissionNotRole('/UserMgr');
+            console.log("user management disabled:"+this.isEnabled)
+        }
+    }, fail => {
+        Message.error(fail.message);
+    })
+
             let menusTemp = this.$store.state.userMenu;
             for (let i = 0, len = menusTemp.length; i < len; i++){
                 menusTemp[i].menuItems = [];

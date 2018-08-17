@@ -28,18 +28,18 @@
       </el-col>
 
       <!--列表-->
-      <el-table :data="result" highlight-current-row @selection-change="selsChange"
+      <el-table border stripe :data="result" highlight-current-row @selection-change="selsChange"
                 style="width: 100%;">
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="index" width="60"></el-table-column>
+        <el-table-column type="selection" ></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
        
-        <el-table-column prop="serialnum" label="序号" width="100" sortable></el-table-column>
-        <el-table-column prop="contractname" label="合同名称" width="100" sortable></el-table-column>
-        <el-table-column prop="contractusage" label="用途" width="150" sortable></el-table-column>
-        <el-table-column prop="signedPart" label="签约方" width="150" sortable></el-table-column>
-        <el-table-column prop="comments" label="备注" width="150" sortable></el-table-column>
-        <el-table-column prop="filename" label="文件名" width="150" sortable></el-table-column>
-        <el-table-column label="操作" width="300">
+        <el-table-column prop="serialnum" label="合同序号"></el-table-column>
+        <el-table-column prop="contractname" label="合同名称" ></el-table-column>
+        <el-table-column prop="contractusage" label="用途" ></el-table-column>
+        <el-table-column prop="signedPart" label="签约方"></el-table-column>
+        <el-table-column prop="comments" label="备注" ></el-table-column>
+        <el-table-column prop="filename" label="文件名"></el-table-column>
+        <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
             <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>
             <el-button type="danger" @click="delBook(scope.$index,scope.row)" size="small">删除</el-button>

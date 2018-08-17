@@ -30,20 +30,20 @@
       </el-col>
 
       <!--列表-->
-      <el-table :data="result" highlight-current-row @selection-change="selsChange"
+      <el-table border stripe :data="result" highlight-current-row @selection-change="selsChange"
                 style="width: 100%;">
-
-        <el-table-column prop="serialnumber" label="序号" width="100" ></el-table-column>
-        <el-table-column prop="company" label="融资租赁公司" width="150" ></el-table-column>
-        <el-table-column prop="passedpeople" label="预计办理人数" width="150" ></el-table-column>
-        <el-table-column prop="finishpeople" label="已办理人数" width="150" ></el-table-column>
-        <el-table-column prop="waitPeople" label="待办理人数" width="150" ></el-table-column>
-        <el-table-column prop="fundSum" label="已融资总额" width="150" ></el-table-column>
-        <el-table-column prop="leftfundSum" label="剩余融资总额" width="150" ></el-table-column>
-        <el-table-column prop="monthlyFundSum" label="本月预计融资总额" width="150" ></el-table-column>
-        <el-table-column label="操作" width="150">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column prop="index" label="序号" width="60px" ></el-table-column>
+        <el-table-column prop="company" label="融资租赁公司"  ></el-table-column>
+        <el-table-column prop="passedpeople" label="预计办理人数"  ></el-table-column>
+        <el-table-column prop="finishpeople" label="已办理人数"  ></el-table-column>
+        <el-table-column prop="waitPeople" label="待办理人数"  ></el-table-column>
+        <el-table-column prop="fundSum" label="已融资总额"  ></el-table-column>
+        <el-table-column prop="leftfundSum" label="剩余融资总额"  ></el-table-column>
+        <el-table-column prop="monthlyFundSum" label="本月预计融资总额" ></el-table-column>
+        <el-table-column label="操作" width="150px">
           <template slot-scope="scope">
-            <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">查看</el-button>
+            <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">查看明细</el-button>
             
           </template>
         </el-table-column>

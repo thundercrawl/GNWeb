@@ -46,20 +46,21 @@
         </el-form>
       </el-col>
 
+       <div class="customizedGrayFont">单位: 万元</div>
       <!--列表-->
-      <el-table :data="result" highlight-current-row @selection-change="selsChange"
+      <el-table border stripe :data="result" highlight-current-row @selection-change="selsChange"
                 style="width: 100%;">
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="index" width="60"></el-table-column>
-        <el-table-column prop="city" label="城市" sortable></el-table-column>
-        <el-table-column prop="company" label="公司" width="80" sortable></el-table-column>
-        <el-table-column prop="cartype" label="车型" width="100" sortable></el-table-column>
-        <el-table-column prop="beianpeople" label="备案人数" width="100" sortable></el-table-column>
-        <el-table-column prop="passedpeople" label="过审人数" width="120" sortable></el-table-column>
-        <el-table-column prop="ordertime" label="下单时间" width="100" sortable></el-table-column>
-        <el-table-column prop="finishtime" label="完成时间" width="100" sortable></el-table-column>
-        <el-table-column prop="finishpeople" label="完成人数" width="100" sortable></el-table-column>
-        <el-table-column prop="fundsum" label="总融资额" width="150" sortable></el-table-column>
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column prop="city" label="城市" ></el-table-column>
+        <el-table-column prop="company" label="公司" ></el-table-column>
+        <el-table-column prop="cartype" label="车型" ></el-table-column>
+        <el-table-column prop="beianpeople" label="备案人数" ></el-table-column>
+        <el-table-column prop="passedpeople" label="过审人数" ></el-table-column>
+        <el-table-column prop="ordertime" label="下单时间" ></el-table-column>
+        <el-table-column prop="finishtime" label="完成时间" ></el-table-column>
+        <el-table-column prop="finishpeople" label="完成人数" ></el-table-column>
+        <el-table-column prop="fundsum" label="总融资额" ></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>

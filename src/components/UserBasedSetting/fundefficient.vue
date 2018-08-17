@@ -606,28 +606,7 @@
   .demo-table-expand label {
     font-weight: normal;
   };
-  .el-table__header {
-    font-size: 15px;
-    color: #aeafb1;
-    font: Arial;
-    font-weight:100;
-}
-.el-table thead
-{
-  color: #aeafb1;
-  font-weight:normal;
-}
-.el-table
-{
-  color: #121418;
-  font-weight:100;
-}
-.el-button--text
-{
-  font-size: 18px;
-  font: Arial;
-
-}
+ 
 .customizedUnClass
 {
   font-size: 18px;
