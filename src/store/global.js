@@ -19,10 +19,19 @@ global.remoteUrl = {
     //dingsheng
     dingshengCityInsert: '/dingSheng/city/insert',
     dingshengCityList: '/dingSheng/city/list',
+    dingshengCityUpdate: '/dingSheng/city/update',
+    dingshengCityDelete: '/dingSheng/city/delete',
+
     dingshengCompanyInsert: '/dingSheng/company/insert',
     dingshengCompanyList: '/dingSheng/company/list',
+    dingshengCompanyUpdate: '/dingSheng/company/update',
+    dingshengCompanyDelete: '/dingSheng/company/delete',
+
     dingshengCartypeInsert: '/dingSheng/cartype/insert',
     dingshengCartypeList: '/dingSheng/cartype/list',
+    dingshengCartypeUpdate: '/dingSheng/cartype/update',
+    dingshengCartypeDelete: '/dingSheng/cartype/delete',
+
     dingshengInsert: '/dingSheng/insert',
     dingshengList: '/dingSheng/list',
     dingshengDelete: '/dingSheng/delete',
@@ -31,10 +40,19 @@ global.remoteUrl = {
     //kunpeng
     kunpengCityInsert: '/kunPeng/city/insert',
     kunpengCityList: '/kunPeng/city/list',
+    kunpengCityUpdate: '/kunPeng/city/update',
+    kunpengCityDelete: '/kunPeng/city/delete',
+
     kunpengCompanyInsert: '/kunPeng/company/insert',
     kunpengCompanyList: '/kunPeng/company/list',
+    kunpengCompanyUpdate: '/kunPeng/company/update',
+    kunpengCompanyDelete: '/kunPeng/company/delete',
+
     kunpengCartypeInsert: '/kunPeng/cartype/insert',
     kunpengCartypeList: '/kunPeng/cartype/list',
+    kunpengCartypeUpdate: '/kunPeng/cartype/update',
+    kunpengCartypeDelete: '/kunPeng/cartype/delete',
+
     kunpengInsert: '/kunPeng/insert',
     kunpengList: '/kunPeng/list',
     kunpengDelete: '/kunPeng/delete',
@@ -57,6 +75,13 @@ global.remoteUrl = {
 
     fundEfficientCompanyInsert: '/fundEfficient/company/insert',
     fundEfficientCompanyList: '/fundEfficient/company/list',
+    fundEfficientCompanyDelete: '/fundEfficient/company/delete',
+    fundEfficientCompanyUpdate: '/fundEfficient/company/update',
+
+    fundEfficientFundUsageInsert: '/fundEfficient/fundUsage/insert',
+    fundEfficientFundUsageList: '/fundEfficient/fundUsage/list',
+    fundEfficientFundUsageDelete: '/fundEfficient/fundUsage/delete',
+    fundEfficientFundUsageUpdate: '/fundEfficient/fundUsage/update',
     //
     userPermissionNotRoleBased: '/userPermissionNotRole',
     cookie: '/cookie',
@@ -72,6 +97,7 @@ global.remoteUrl = {
     userDelete: '/user/delete',
     userAdd: '/user/save',
     userUpdate: '/user/update',
+    userUpdatePWD: '/user/updatePWD',
     distributeRole: '/user/distributeRole',
     //terms manage
     dictionary: '/terms/dictionary',

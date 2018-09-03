@@ -51,10 +51,12 @@
 
       <!--工具条-->
       <el-col :span="24" class="toolbar">
+        <!--
         <el-button type="danger" @click="batchDeleteBook" :disabled="this.sels.length===0">批量删除</el-button>
         <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
                        style="float:right;">
         </el-pagination>
+        -->
       </el-col>
       <!--edit dialog-->
       <el-dialog title="编辑" :visible.sync ="editFormVisible" :close-on-click-modal="false">
@@ -406,7 +408,7 @@ import config from '../../config.js'
       }
     },
     mounted() {
-     // this.handleSearch()
+     this.handleSearch()
     }
   }
 </script>

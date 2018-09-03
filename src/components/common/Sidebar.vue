@@ -119,7 +119,7 @@
     .sidebar {
         display: block;
         position: absolute;
-        width: 180px;
+        width: 160px;
         left: 0;
         top: 70px;
         bottom: 0;

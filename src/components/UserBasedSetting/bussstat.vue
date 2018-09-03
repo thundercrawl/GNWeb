@@ -23,7 +23,7 @@
           
           <el-form-item>
             <el-button type="primary" v-on:click="handleSearch">查询</el-button>
-            <el-button type="primary" @click="exportExcel('date')">导出Excel</el-button>
+          
           </el-form-item>
          
         </el-form>
@@ -41,20 +41,20 @@
         <el-table-column prop="fundSum" label="已融资总额"  ></el-table-column>
         <el-table-column prop="leftfundSum" label="剩余融资总额"  ></el-table-column>
         <el-table-column prop="monthlyFundSum" label="本月预计融资总额" ></el-table-column>
+        <!--
         <el-table-column label="操作" width="150px">
           <template slot-scope="scope">
             <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">查看明细</el-button>
             
           </template>
         </el-table-column>
+        -->
       </el-table>
 
       <!--工具条-->
       <el-col :span="24" class="toolbar">
        
-        <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
-                       style="float:right;">
-        </el-pagination>
+        <el-button type="primary" @click="exportExcel('date')" style="float:right">导出Excel</el-button>
       </el-col>
 
       <el-dialog title="查看细节" :visible.sync ="editFormVisible" :close-on-click-modal="false">

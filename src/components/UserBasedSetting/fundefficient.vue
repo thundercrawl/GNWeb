@@ -60,18 +60,21 @@
     </el-col>
       <!--工具条-->
       <el-col :span="24" class="toolbar">
-        <el-button type="danger" @click="batchDeleteBook" :disabled="this.sels.length===0">批量删除</el-button>
         <!--
+        <el-button type="danger" @click="batchDeleteBook" :disabled="this.sels.length===0">批量删除</el-button>
+        
         <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
                        style="float:center;">
         </el-pagination>
         -->
         <el-button type="primary" v-on:click="exportExcel('date')" style="float:right;">导出excel</el-button>
-        <el-button v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/excelI')" type="primary" v-on:click="importExcel" style="float:right;">导入excel</el-button>
-        <el-button type="primary" v-on:click="exportExcel('')" style="float:right;">导出所有excel</el-button>
+        <el-button v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/excelI')" type="primary" v-on:click="importExcel" style="float:right;position:relative;right:5px">导入excel</el-button>
+        <el-button type="primary" v-on:click="exportExcel('')" style="float:right;right:10px">导出所有excel</el-button>
         
       </el-col>
 
+
+      <!--edit-->
       <el-dialog title="编辑" :visible.sync ="editFormVisible" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="100px" :rules="editFormRules" ref="editForm">
              
@@ -93,7 +96,7 @@
            <el-form-item label="资金用途">
                     <el-select v-model="editForm.fundUsage" placeholder="请选择">
                         
-                        <el-option v-for="item in fundEfficientFundUsageSelectItems" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        <el-option v-for="item in fundEfficientFundUsageSelectItems" :label="item.label" :value="item.key" :key="item.key"></el-option>
                     </el-select>
         </el-form-item>
           <el-form-item label="月可放款总额" prop="monthlyFundSum">
@@ -126,6 +129,7 @@
                         
                         <el-option v-for="item in fundEfficientCompanySelectItems" :label="item.company" :value="item.key" :key="item.key"></el-option>
                     </el-select>
+                     
         </el-form-item>
         
         <el-form-item label="资金总额" prop="fundSum">
@@ -135,9 +139,12 @@
            <el-form-item label="资金用途" prop="fundUsage">
                     <el-select v-model="fundEfficientFundUsageSelect" placeholder="请选择">
                         
-                        <el-option v-for="item in fundEfficientFundUsageSelectItems" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        <el-option v-for="item in fundEfficientFundUsageSelectItems" :label="item.label" :value="item.key" :key="item.key"></el-option>
                     </el-select>
+                      <el-button type="text" @click="showAddFundUsageDialog" auto-complete="off"> 添加修改>></el-button>
         </el-form-item>
+        
+
           <el-form-item label="月可放款总额" prop="monthlyFundSum">
             <el-input v-model="addForm.monthlyFundSum" auto-complete="off"></el-input>
           </el-form-item>
@@ -156,18 +163,121 @@
           <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
         </div>
       </el-dialog>
-      <!--add fund source-->
+      <!-- add fundusage-->
+      <el-dialog title="新增资金用途" :visible.sync ="addFundUsageFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="addFundUsageForm" label-width="180px"  :rules="addFundUsageFormRules"  ref="addFundUsageForm">
+          <el-form-item label="资金用途" prop="fundUsage">
+            <el-input v-model="addFundUsageForm.fundUsage" auto-complete="off"></el-input>
+          </el-form-item>
+           
+           
+         
+
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+          
+          <el-button type="text" @click.native="showAddFundUsageTable" style="float:left"> 管理资金用途>></el-button>
+          <el-button type="text" @click.native="disableAddFundUsageTable" style="float:left" v-show="showFundUsageTableVisible"> <<收起列表</el-button>
+          <el-button @click.native="addFundUsageFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="addFundUsageSubmit" :loading="addLoading">提交</el-button>
+
+        
+        <el-table border stripe :data="fundUsageResult" highlight-current-row @selection-change="selsChange"
+                style="width: 100%;" :row-class-name="customizedGrayFont" v-show="showFundUsageTableVisible">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column prop="fundUsage" label="资金用途"  ></el-table-column>
+        
+        <el-table-column v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/edit')" label="操作" width="150">
+          <template slot-scope="scope">
+           <el-button size="small"  @click="showFundUsageEditDialog(scope.$index,scope.row)">编辑</el-button>
+            <el-button type="danger" @click="deleteItemFundUsage(scope.$index,scope.row)" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    
+        
+        </div>
+      </el-dialog>
+
+
+      <el-dialog title="编辑资金用途" :visible.sync ="editFundUsageFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="editFundUsageForm" label-width="180px"   :rules="editFundUsageFormRules" ref="editFundUsageForm">
+          <el-form-item label="资金用途" prop="fundUsage">
+            <el-input v-model="editFundUsageForm.fundUsage" auto-complete="off"></el-input>
+          </el-form-item>
+           
+           
+         
+
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+        
+          <el-button @click.native="editFundUsageFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="editFundUsageSubmit" :loading="addLoading">提交</el-button>       
+        </div>
+      </el-dialog>
+
+      <!--add fundsource-->
       <el-dialog title="新增资金来源公司" :visible.sync ="addCompanyFormVisible" :close-on-click-modal="false" width="300">
         <el-form :model="addCompanyForm" label-width="180px"  :rules="addFormCompanyRules"  ref="addCompanyForm">
           <el-form-item label="资金来源公司" prop="company">
             <el-input v-model="addCompanyForm.company" auto-complete="off"></el-input>
           </el-form-item>
-        
+           
+           
+         
+
         </el-form>
         
         <div slot="footer" class="dialog-footer">
+          
+          <el-button type="text" @click.native="showAddCompanyTable" style="float:left"> 管理公司列表>></el-button>
+          <el-button type="text" @click.native="disableAddCompanyTable" style="float:left" v-show="showCompanyTableVisible"> <<收起列表</el-button>
           <el-button @click.native="addCompanyFormVisible = false">取消</el-button>
           <el-button type="primary" @click.native="addCompanySubmit" :loading="addLoading">提交</el-button>
+
+        
+        <el-table border stripe :data="companyResult" highlight-current-row @selection-change="selsChange"
+                style="width: 100%;" :row-class-name="customizedGrayFont" v-show="showCompanyTableVisible">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column prop="company" label="资金来源公司"  ></el-table-column>
+        
+        <el-table-column v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/edit')" label="操作" width="150">
+          <template slot-scope="scope">
+           <el-button size="small"  @click="showCompanyEditDialog(scope.$index,scope.row)">编辑</el-button>
+            <el-button type="danger" @click="deleteItemCompany(scope.$index,scope.row)" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    
+        
+        </div>
+      </el-dialog>
+
+
+      <el-dialog title="编辑资金来源公司" :visible.sync ="editCompanyFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="editCompanyForm" label-width="180px"   :rules="editCompanyFormRules" ref="editCompanyForm">
+          <el-form-item label="资金来源公司" prop="company">
+            <el-input v-model="editCompanyForm.company" auto-complete="off"></el-input>
+          </el-form-item>
+           
+           
+         
+
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+        
+          <el-button @click.native="editCompanyFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="editCompanySubmit" :loading="addLoading">提交</el-button>
+
+        
+    
+        
         </div>
       </el-dialog>
     <!--a'd'd import excel-->
@@ -201,6 +311,8 @@
         filters: {
           name: ''
         },
+        fundUsageResult:[],
+        companyResult:[],
         result: [],
         total: 0,
         page: 1,
@@ -269,6 +381,7 @@
           leftFundSum: ''
         },
         fundEfficientFundUsageSelectItems:[
+          /*
           {
             value: '0',
             label: '个人直租'
@@ -280,13 +393,15 @@
           {
              value: '2',
             label: '网约车回租-库存车'
-          }
+          }*/
         ],
-
+        importExcelVisible: false,
         fundEfficientFundUsageSelect:'',
         fundEfficientCompanySelectItems: [],
         fundEfficientCompanySelect: '',
-        addCompanyFormVisible: false,//新增界面是否显示
+
+        /*fundsource*/
+        addCompanyFormVisible: false,
         addCompanyForm: {
           company: ''
         },
@@ -295,7 +410,40 @@
             {required: true, message: '请输入融资租赁公司', trigger: 'blur'}
           ]
         },
-        importExcelVisible: false,
+      
+        showCompanyTableVisible:false,
+
+        editCompanyFormVisible:false,
+        editCompanyForm:{
+          company: ''
+        },
+        editCompanyFormRules: {
+          company: [
+            {required: true, message: '请输入融资租赁公司', trigger: 'blur'}
+          ]
+        },
+        /*fundusage*/
+        addFundUsageFormVisible: false,
+        addFundUsageForm: {
+          fundUsage: ''
+        },
+        addFundUsageFormRules: {
+          fundUsage: [
+            {required: true, message: '请输入融资租赁公司', trigger: 'blur'}
+          ]
+        },
+      
+        showFundUsageTableVisible:false,
+
+        editFundUsageFormVisible:false,
+        editFundUsageForm:{
+          fundUsage: ''
+        },
+        editFundUsageFormRules: {
+          fundUsage: [
+            {required: true, message: '请输入融资租赁公司', trigger: 'blur'}
+          ]
+        },
       }
     },
 
@@ -304,7 +452,9 @@
             uploaddialog:uploaddialog
         },
     methods: {
-  
+    
+    changeFundUsageItems:function()
+    {},
     exportExcel:function(date)
     {
         let that = this;
@@ -390,6 +540,26 @@
         });*/
 
       },
+      searchFundUsage:function()
+      {
+         this.$http.get(this.$global.remote().fundEfficientFundUsageList,{},response =>
+          {
+             let items = []
+            let item = ''
+            for(item in response.result)
+            {
+              let values ={}
+              values.label = response.result[item].fundUsage
+              values.key = item
+              items.push(values)
+              }
+            this.fundEfficientFundUsageSelectItems = items
+            this.fundUsageResult = response.result
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+      },
       selsChange: function (sels) {
         this.sels = sels;
       },
@@ -420,6 +590,47 @@
         }).catch(() => {
         });
       },
+      deleteItemFundUsage:function(index, row)
+       {
+        let that = this;
+        this.$confirm('确认删除该记录吗?', '提示', {type: 'warning'}).then(() => {
+         
+          //let params=Object.assign({}, row);
+          let params = {}
+          params.tid = row.tid;
+           this.$http.post(this.$global.remote().fundEfficientFundUsageDelete, params, response => {
+ 
+                this.$message("数据删除成功");
+                this.searchFundUsage();
+      
+            },fail =>{
+                self.tips = fail.message;
+               
+            });
+
+        }).catch(() => {
+        });
+      },
+      deleteItemCompany:
+      function (index, row) {
+        let that = this;
+        this.$confirm('确认删除该记录吗?', '提示', {type: 'warning'}).then(() => {
+         
+          //let params=Object.assign({}, row);
+          let params = {}
+          params.tid = row.tid;
+           this.$http.post(this.$global.remote().fundEfficientCompanyDelete, params, response => {
+ 
+                this.$message("数据删除成功");
+      
+            },fail =>{
+                self.tips = fail.message;
+               
+            });
+
+        }).catch(() => {
+        });
+      },
       //显示编辑界面
       showEditDialog: function (index, row) {
         this.editFormVisible = true;
@@ -441,6 +652,78 @@
         console.log("found foundusage item:"+item)
        // this.editForm.fundSource = 
       },
+
+       showCompanyEditDialog: function (index, row) {
+        this.editCompanyFormVisible = true;
+        this.editCompanyForm = Object.assign({}, row);
+      
+       // this.editForm.fundSource = 
+      },
+      
+       showFundUsageEditDialog: function (index, row) {
+        this.editFundUsageFormVisible = true;
+        this.editFundUsageForm = Object.assign({}, row);
+      
+       // this.editForm.fundSource = 
+      },
+       editFundUsageSubmit:function()
+      {
+         let that = this;
+        this.$refs.editFundUsageForm.validate((valid) => {
+          if (valid) {
+            if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, this.editFundUsageForm);
+           
+          this.$http.post(this.$global.remote().fundEfficientFundUsageUpdate, params, response => {
+                
+                console.log(response.result)
+                this.loading = false;
+                that.editFundUsageFormVisible = false;
+                this.$message("编辑资金用途成功");
+                this.searchFundUsage();
+            },fail =>{
+                self.tips = fail.message;
+                that.editCompanyFormVisible = false;
+                this.loading = false;
+            });
+          }
+          }
+        });
+      },
+      editCompanySubmit:function()
+      {
+         let that = this;
+        this.$refs.editCompanyForm.validate((valid) => {
+          if (valid) {
+            if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, this.editCompanyForm);
+           
+          this.$http.post(this.$global.remote().fundEfficientCompanyUpdate, params, response => {
+                
+                console.log(response.result)
+                this.loading = false;
+                that.editCompanyFormVisible = false;
+                this.$message("编辑资金来源成功");
+                        
+                    this.$http.get(this.$global.remote().fundEfficientCompanyList,{},response =>
+                    {
+                      this.companyResult = response.result
+                    
+                    },fail=>
+                    {
+                      this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+                    }); 
+            },fail =>{
+                self.tips = fail.message;
+                that.editCompanyFormVisible = false;
+                this.loading = false;
+            });
+          }
+          }
+        });
+      },
       //编辑
       editSubmit: function () {
          let that = this;
@@ -453,10 +736,7 @@
             console.log("found source:"+params.fundSource)
             params.fundUsage = this.fundEfficientFundUsageSelectItems[this.editForm.fundUsage].label
             params.fundSource = this.fundEfficientCompanySelectItems[this.editForm.fundSource].company
-           //params.fundUsage = this.fundEfficientFundUsageSelectItems[this.editForm.fundUsage].label;
-           // params.company = this.kunpengcitySelectCompany[this.editForm.company].company;
-           // params.cartype = this.kunpengcitySelectCartype[this.editForm.cartype].cartype;
-          // console.log(params.kunpengDate.toLocaleDateString())
+         
            
           this.$http.post(this.$global.remote().fundEfficientUpdate, params, response => {
                 
@@ -489,15 +769,69 @@
       },
       showAddCompanyDialog: function () {
         this.addCompanyFormVisible = true;
+        this.showCompanyTableVisible = false;
         this.addCompanyForm = {
-          sourcename: ''
+          company: ''
         };
+      },
+       showAddFundUsageDialog: function () {
+        this.addFundUsageFormVisible = true;
+        this.showFundUsageTableVisible = false;
+        this.addFundUsageForm = {
+          fundUsage: ''
+        };
+      },
+      showAddCompanyTable: function() {
+        console.log("show add company table")
+        this.showCompanyTableVisible = true;
+        
+         this.$http.get(this.$global.remote().fundEfficientCompanyList,{},response =>
+          {
+            this.companyResult = response.result
+          
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+
+
+      },
+      showAddFundUsageTable: function() {
+     
+        this.showFundUsageTableVisible = true;
+        
+         this.$http.get(this.$global.remote().fundEfficientFundUsageList,{},response =>
+          {
+            this.fundUsageResult = response.result
+          
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+
+
+      },
+      disableAddCompanyTable: function()
+      {
+        this.showCompanyTableVisible = false;
+        
+      },
+      disableAddFundUsageTable: function()
+      {
+        this.showFundUsageTableVisible = false;
       },
       importExcel:function()
       {
           this.importExcelVisible = true;
           this.$global.componentSelect().name = "fundefficient";
       },
+      importExcel:function()
+      {
+          this.importExcelVisible = true;
+          this.$global.componentSelect().name = "fundefficient";
+      },
+
+      
       //add
       addSubmit: function () {
          let that = this;
@@ -542,6 +876,30 @@
             },fail =>{
                 self.tips = fail.message;
                 that.addCompanyFormVisible = false;
+                this.loading = false;
+            });
+          }
+        });
+      },
+
+      //add fundusage
+      addFundUsageSubmit: function () {
+        let that = this;
+        that.$refs.addFundUsageForm.validate((valid) => {
+          if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, that.addFundUsageForm);       
+          that.$http.post(this.$global.remote().fundEfficientFundUsageInsert, params, response => {
+              
+                console.log(response.result)
+                this.loading = false;
+                that.addFundUsageFormVisible = false;
+                this.$message("添加资金用途成功");
+               this.searchFundUsage()
+              
+            },fail =>{
+                self.tips = fail.message;
+                that.addFundUsageFormVisible = false;
                 this.loading = false;
             });
           }
@@ -596,7 +954,8 @@
           {
             this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
           }); 
-
+          
+          this.searchFundUsage();
 
     }
   }

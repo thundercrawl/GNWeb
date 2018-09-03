@@ -39,6 +39,7 @@
     </div>
 </template>
 <script>
+
     export default {
         data(){
             let validatePass = (rule,value, callback) => {
@@ -46,8 +47,8 @@
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (this.addForm.repassword !== '') {
-            this.$refs.addForm.validateField('repassword');
+          if (this.addForm.p2 !== '') {
+            this.$refs.addForm.validateField('p2');
           }
           callback();
         }
@@ -105,11 +106,19 @@
             addSubmitPassword()
             {
                 console.log("enter addsubmitpassword")
-                        this.$refs.addForm.validate((valid) => {
+                this.$refs.addForm.validate((valid) => {
                 if (valid) {
                     
                     this.changePasswordVisable = false
-
+                    let param = {}
+                    param.userInfoDTO = JSON.parse(sessionStorage.getItem('userInfo'))
+                    console.log("user info:"+param.userInfoDTO)
+                    param.userInfoDTO.password= this.addForm.p1;
+                    this.$http.post(this.$global.remote.remote().userUpdate, param, response => {
+                   this.$message("修改密码成功")
+                }, fail => {
+                    this.$message.error(fail.message);
+                })
                 } else {
                    
                     this.$message("输入有错")
@@ -140,8 +149,8 @@
 
                 } else if (command == 'updatePassword'){
                     console.log("call change password")
-                    this.addForm.password = ''
-                    this.addForm.repassword = ''
+                    this.addForm.p1 = ''
+                    this.addForm.p2 = ''
                     this.changePasswordVisable = true;
 
                 }
@@ -199,7 +208,7 @@
     .header .logoimage
     {
         float: left;
-        padding-left: 30px;
+        padding-left:10px;
         padding-top:20px;
         top: 60px;
         width: 130px;

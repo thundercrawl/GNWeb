@@ -112,9 +112,5 @@
         }
     };
     
-.el-tabs__item{
-     font-size: 20px;
-    color: #aeafb1;
-    font: Arial
-}   
+
 </style>

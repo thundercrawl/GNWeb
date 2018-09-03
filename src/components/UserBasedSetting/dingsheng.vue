@@ -25,58 +25,65 @@
           <el-form-item>
             <el-button type="primary" v-on:click="showAddDialog">新建</el-button>
           </el-form-item>
+        </el-form>
+
+         <el-form :inline="true" :model="filters">  
           <el-form-item>
-            <el-button type="primary" @click="showAddDialogCity">添加新城市</el-button>
+            <el-button type="text" @click="showAddDialogCity"> >添加新城市</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="showAddDialogCompany">添加新公司</el-button>
+            <el-button type="text" @click="showAddDialogCompany"> >添加新公司</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="showAddDialogCartype">添加新车型</el-button>
+            <el-button type="text" @click="showAddDialogCartype"> >添加新车型</el-button>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" v-on:click="exportExcel('date')">导出excel</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" v-on:click="exportExcel('')">导出所有excel</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button v-if="this.$global.haveUserPermissionNotRole('/kunpengBussiness/excelI')" type="primary" v-on:click="importExcel">导入excel</el-button>
-          </el-form-item>
+          
         </el-form>
       </el-col>
 
-      <!--列表-->
        <div class="customizedGrayFont">单位: 万元</div>
+      <!--列表-->
       <el-table border stripe :data="result" highlight-current-row @selection-change="selsChange"
                 style="width: 100%;">
         <el-table-column type="selection"></el-table-column>
         <el-table-column type="index" label="序号" width="60px"></el-table-column>
-        <el-table-column prop="city" label="城市"></el-table-column>
-        <el-table-column prop="company" label="公司"></el-table-column>
-        <el-table-column prop="cartype" label="车型"></el-table-column>
+        <el-table-column prop="city" label="城市" ></el-table-column>
+        <el-table-column prop="company" label="公司" ></el-table-column>
+        <el-table-column prop="cartype" label="车型" ></el-table-column>
+        <el-table-column prop="carsalingprice" label="车辆指导价" ></el-table-column>
+        <el-table-column prop="carinvoiceprice" label="车辆开票价" ></el-table-column>
+        <el-table-column prop="carinsurance" label="保险" ></el-table-column>
+        <el-table-column prop="investsum" label="融资额" ></el-table-column>
         <el-table-column prop="beianpeople" label="备案人数" ></el-table-column>
         <el-table-column prop="passedpeople" label="过审人数" ></el-table-column>
-        <el-table-column prop="ordertime" label="下单时间" ></el-table-column>
+      <el-table-column prop="ordertime" label="下单时间" ></el-table-column>
         <el-table-column prop="finishtime" label="完成时间" ></el-table-column>
         <el-table-column prop="finishpeople" label="完成人数" ></el-table-column>
-        <el-table-column prop="fundsum" label="总融资额"></el-table-column>
-        <el-table-column label="操作" v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/edit')" width="150px">
+        <el-table-column prop="fundsum" label="总融资额" ></el-table-column>
+        <el-table-column label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>
             <el-button type="danger" size="small" @click="deleteItem(scope.$index,scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-
-      <!--
-      <el-col :span="24" class="toolbar">
+    
+      
+      
+       <!--
         <el-button type="danger" @click="batchDeleteBook" :disabled="this.sels.length===0">批量删除</el-button>
+         
         <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
                        style="float:right;">
         </el-pagination>-->
-      </el-col>
-
+       
+      
+            <el-button type="primary" v-on:click="exportExcel('date')" style="float:right;position:relative">导出excel</el-button>
+            <el-button v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/excelI')"  type="primary"  v-on:click="importExcel" style="float:right;position:relative;right:5px">导入excel</el-button>
+            <el-button type="primary" v-on:click="exportExcel('')" style="float:right;right:30px">导出所有excel</el-button>
+        
+        
+      
     <!-- edit dialog -->
       <el-dialog title="编辑" :visible.sync ="editFormVisible" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
@@ -89,22 +96,34 @@
           <el-form-item label="城市">
                     <el-select v-model="editForm.city" placeholder="请选择">
                         
-                        <el-option v-for="item in kunpengcitySelectCities" :label="item.city" :value="item.key" :key="item.key"></el-option>
+                        <el-option v-for="item in dingshengcitySelectCities" :label="item.city" :value="item.key" :key="item.key"></el-option>
                     </el-select>
         </el-form-item>
         <el-form-item label="公司">
                     <el-select v-model="editForm.company" placeholder="请选择">
                         
-                        <el-option v-for="item in kunpengcitySelectCompany" :label="item.company" :value="item.key" :key="item.key"></el-option>
+                        <el-option v-for="item in dingshengcitySelectCompany" :label="item.company" :value="item.key" :key="item.key"></el-option>
                     </el-select>
         </el-form-item>
          <el-form-item label="车型">
                     <el-select v-model="editForm.cartype" placeholder="请选择">
                         
-                        <el-option v-for="item in kunpengcitySelectCartype" :label="item.cartype" :value="item.key" :key="item.key"></el-option>
+                        <el-option v-for="item in dingshengcitySelectCartype" :label="item.cartype" :value="item.key" :key="item.key"></el-option>
                     </el-select>
         </el-form-item>
-        <el-form-item label="备案人数" prop="beianpeople">
+        <el-form-item label="指导价"  prop="carsalingprice">
+            <el-input v-model="editForm.carsalingprice" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="开票价"  prop="carinvoiceprice">
+            <el-input v-model="editForm.carinvoiceprice" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="保险"  prop="carinsurance">
+            <el-input v-model="editForm.carinsurance" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="融资额"  prop="investsum">
+            <el-input v-model="editForm.investsum" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
+        <el-form-item label="备案人数"  prop="beianpeople">
             <el-input v-model="editForm.beianpeople" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="过审人数" prop="passedpeople">
@@ -129,7 +148,7 @@
         </div>
       </el-dialog>
 
-      <!--新增kunpeng-->
+      <!--新增dingsheng-->
       <el-dialog title="新增业务" :visible.sync ="addFormVisible" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
           
@@ -141,21 +160,33 @@
           <el-form-item label="城市" prop="city">
                     <el-select v-model="addForm.city" placeholder="请选择">
                         
-                        <el-option v-for="item in kunpengcitySelectCities" :label="item.city" :value="item.key" :key="item.key"></el-option>
+                        <el-option v-for="item in dingshengcitySelectCities" :label="item.city" :value="item.key" :key="item.key"></el-option>
                     </el-select>
         </el-form-item>
         <el-form-item label="公司" prop="company">
                     <el-select v-model="addForm.company" placeholder="请选择">
                         
-                        <el-option v-for="item in kunpengcitySelectCompany" :label="item.company" :value="item.key" :key="item.key"></el-option>
+                        <el-option v-for="item in dingshengcitySelectCompany" :label="item.company" :value="item.key" :key="item.key"></el-option>
                     </el-select>
         </el-form-item>
          <el-form-item label="车型" prop="cartype">
                     <el-select v-model="addForm.cartype" placeholder="请选择">
                         
-                        <el-option v-for="item in kunpengcitySelectCartype" :label="item.cartype" :value="item.key" :key="item.key"></el-option>
+                        <el-option v-for="item in dingshengcitySelectCartype" :label="item.cartype" :value="item.key" :key="item.key"></el-option>
                     </el-select>
         </el-form-item>
+        <el-form-item label="指导价"  prop="carsalingprice">
+            <el-input v-model="addForm.carsalingprice" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="开票价"  prop="carinvoiceprice">
+            <el-input v-model="addForm.carinvoiceprice" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="保险"  prop="carinsurance">
+            <el-input v-model="addForm.carinsurance" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="融资额"  prop="investsum">
+            <el-input v-model="addForm.investsum" placeholder="只接受数字" auto-complete="off"></el-input>
+          </el-form-item>
         <el-form-item label="备案人数"  prop="beianpeople">
             <el-input v-model="addForm.beianpeople" placeholder="只接受数字" auto-complete="off"></el-input>
           </el-form-item>
@@ -182,66 +213,151 @@
       </el-dialog>
 
     <!-- add city -->
-    <!--新增界面-->
-      <el-dialog title="新增城市" :visible.sync ="addFormCityVisible" :close-on-click-modal="false">
-        <el-form :model="addFormCity" label-width="80px" :rules="addFormCityRules" ref="addFormCity">
+  
+      <el-dialog title="新增城市" :visible.sync ="addCityFormVisible" :close-on-click-modal="false">
+        <el-form :model="addCityForm" label-width="80px" :rules="addCityFormRules" ref="addCityForm">
           <el-form-item label="城市" prop="city">
-            <el-input v-model="addFormCity.city" auto-complete="off"></el-input>
+            <el-input v-model="addCityForm.city" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="省" prop="province">
-            <el-input v-model="addFormCity.province" auto-complete="off"></el-input>
+            <el-input v-model="addCityForm.province" auto-complete="off"></el-input>
           </el-form-item>
          
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click.native="addFormCityVisible = false">取消</el-button>
+           <el-button type="text" @click.native="showAddCityTable" style="float:left"> 管理城市>></el-button>
+          <el-button type="text" @click.native="disableAddCityTable" style="float:left" v-show="showCityTableVisible"> <<收起列表</el-button>
+          <el-button @click.native="addCityFormVisible = false">取消</el-button>
           <el-button type="primary" @click.native="addCitySubmit" :loading="addLoading">提交</el-button>
+          
+        <el-table border stripe :data="cityResult" highlight-current-row @selection-change="selsChange"
+                style="width: 100%;" :row-class-name="customizedGrayFont" v-show="showCityTableVisible">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column prop="city" label="城市"  ></el-table-column>
+        <el-table-column prop="province" label="省"  ></el-table-column>
+        <el-table-column v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/edit')" label="操作" width="150">
+          <template slot-scope="scope">
+           <el-button size="small"  @click="showCityEditDialog(scope.$index,scope.row)">编辑</el-button>
+            <el-button type="danger" @click="deleteByID(scope.$index,scope.row,url_dingshengCityDelete)" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
         </div>
       </el-dialog>
 
+    
+      <el-dialog title="编辑城市" :visible.sync ="editCityFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="editCityForm" label-width="180px"   :rules="editCityFormRules" ref="editCityForm">
+          <el-form-item label="城市" prop="city">
+            <el-input v-model="editCityForm.city" auto-complete="off"></el-input>
+          </el-form-item>
+           <el-form-item label="省" prop="province">
+            <el-input v-model="editCityForm.province" auto-complete="off"></el-input>
+          </el-form-item>
+           
+         
+
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+  
+          <el-button @click.native="editCityFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="editCitySubmit" :loading="addLoading">提交</el-button>       
+        </div>
+      </el-dialog>
       <!-- add company -->
-    <!--新增界面-->
-      <el-dialog title="新增公司" :visible.sync ="addFormCompanyVisible" :close-on-click-modal="false">
-        <el-form :model="addFormCity" label-width="80px" :rules="addFormCityRules" ref="addFormCompany">
+
+      <el-dialog title="新增公司" :visible.sync ="addCompanyFormVisible" :close-on-click-modal="false">
+        <el-form :model="addCompanyForm" label-width="80px" :rules="addCompanyFormRules" ref="addCompanyForm">
           <el-form-item label="公司" prop="company">
-            <el-input v-model="addFormCompany.company" auto-complete="off"></el-input>
+            <el-input v-model="addCompanyForm.company" auto-complete="off"></el-input>
           </el-form-item>
          
          
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click.native="addFormCompanyVisible = false">取消</el-button>
+          <el-button type="text" @click.native="showAddCompanyTable" style="float:left"> 管理公司>></el-button>
+          <el-button type="text" @click.native="disableAddCompanyTable" style="float:left" v-show="showCompanyTableVisible"> <<收起列表</el-button>
+    
+          <el-button @click.native="addCompanyFormVisible = false">取消</el-button>
           <el-button type="primary" @click.native="addCompanySubmit" :loading="addLoading">提交</el-button>
+        
+
+         <el-table border stripe :data="companyResult" highlight-current-row @selection-change="selsChange"
+                style="width: 100%;" :row-class-name="customizedGrayFont" v-show="showCompanyTableVisible">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column prop="company" label="公司"  ></el-table-column>
+        
+        <el-table-column v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/edit')" label="操作" width="150">
+          <template slot-scope="scope">
+           <el-button size="small"  @click="showCompanyEditDialog(scope.$index,scope.row)">编辑</el-button>
+            <el-button type="danger" @click="deleteByID(scope.$index,scope.row,url_dingshengCompanyDelete)" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      </div>
+      </el-dialog>
+    <el-dialog title="编辑公司" :visible.sync ="editCompanyFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="editCompanyForm" label-width="180px"   :rules="editCompanyFormRules" ref="editCompanyForm">
+          <el-form-item label="公司" prop="company">
+            <el-input v-model="editCompanyForm.company" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+  
+          <el-button @click.native="editCompanyFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="editCompanySubmit" :loading="addLoading">提交</el-button>       
         </div>
       </el-dialog>
-
       <!-- add cartype -->
     <!--新增界面-->
-      <el-dialog title="新增车型" :visible.sync ="addFormCartypeVisible" :close-on-click-modal="false" width="30%">
-        <el-form :model="addFormCartype" label-width="100px" :rules="addFormCartypeRules" ref="addFormCartype">
+      <el-dialog title="新增车型" :visible.sync ="addCartypeFormVisible" :close-on-click-modal="false" width="30%">
+        <el-form :model="addCartypeForm" label-width="100px" :rules="addCartypeFormRules" ref="addCartypeForm">
           <el-form-item label="车辆型号" prop="cartype">
-            <el-input v-model="addFormCartype.cartype" auto-complete="off"></el-input>
+            <el-input v-model="addCartypeForm.cartype" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="车辆指导价" prop="carsalingprice">
-            <el-input v-model="addFormCartype.carsalingprice" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="车辆开票价" prop="carinvoiceprice">
-            <el-input v-model="addFormCartype.carinvoiceprice" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="保险" prop="carinsurance">
-            <el-input v-model="addFormCartype.carinsurance" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="融资额" prop="investsum">
-            <el-input v-model="addFormCartype.investsum" auto-complete="off"></el-input>
-          </el-form-item>
+         
          
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click.native="addFormCartypeVisible = false">取消</el-button>
+          <el-button type="text" @click.native="showAddCartypeTable" style="float:left"> 管理车型>></el-button>
+          <el-button type="text" @click.native="disableAddCartypeTable" style="float:left" v-show="showCartypeTableVisible"> <<收起列表</el-button>
+    
+          <el-button @click.native="addCartypeFormVisible = false">取消</el-button>
           <el-button type="primary" @click.native="addCartypeSubmit" :loading="addLoading">提交</el-button>
+          
+         <el-table border stripe :data="cartypeResult" highlight-current-row @selection-change="selsChange"
+                style="width: 100%;" :row-class-name="customizedGrayFont" v-show="showCartypeTableVisible">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column prop="cartype" label="车辆型号"></el-table-column>
+        
+        <el-table-column v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/edit')" label="操作" width="150">
+          <template slot-scope="scope">
+           <el-button size="small"  @click="showCartypeEditDialog(scope.$index,scope.row)">编辑</el-button>
+            <el-button type="danger" @click="deleteByID(scope.$index,scope.row,url_dingshengCartypeDelete)" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
         </div>
       </el-dialog>
 
+     <el-dialog title="编辑车型" :visible.sync ="editCartypeFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="editCartypeForm" label-width="180px"   :rules="editCartypeFormRules" ref="editCartypeForm">
+          <el-form-item label="车辆型号" prop="cartype">
+            <el-input v-model="editCartypeForm.cartype" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+  
+          <el-button @click.native="editCartypeFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="editCartypeSubmit" :loading="addLoading">提交</el-button>       
+        </div>
+      </el-dialog>
       <!--a'd'd import excel-->
          <el-dialog title="导入Excel" :visible.sync ="importExcelVisible" :close-on-click-modal="false">
         <el-form :model="importExcelSource" label-width="80px"  >
@@ -270,18 +386,24 @@ import dateClum from "../common/dateClum"
         filters: {
           name: ''
         },
+        url_dingshengCityDelete:this.$global.remote().dingshengCityDelete,
+        url_dingshengCompanyDelete:this.$global.remote().dingshengCompanyDelete,
+        url_dingshengCartypeDelete:this.$global.remote().dingshengCartypeDelete,
         result: [],
+        cityResult:[],
+        companyResult:[],
+        cartypeResult:[],
         total: 0,
         page: 1,
         limit: 10,
         loading: false,
         sels: [], //列表选中列
-        kunpengcitySelect:'',
-        kunpengcitySelectCities:[],
-        kunpengcompanySelect:'',
-        kunpengcitySelectCompany:[],
-        kunpengcartypeSelect:'',
-        kunpengcitySelectCartype:[],
+        dingshengcitySelect:'',
+        dingshengcitySelectCities:[],
+        dingshengcompanySelect:'',
+        dingshengcitySelectCompany:[],
+        dingshengcartypeSelect:'',
+        dingshengcitySelectCartype:[],
         importExcelVisible: false,
 
         //编辑相关数据
@@ -306,11 +428,10 @@ import dateClum from "../common/dateClum"
           fundsum:''
         },
 
-        //新增相关数据
+        //add main
         addFormVisible: false,//新增界面是否显示
         addLoading: false,
         addFormRules: {
-          
            kunpengDate: [
             {required: true, message: '', trigger: 'blur'}
           ],
@@ -322,6 +443,9 @@ import dateClum from "../common/dateClum"
           ],
            cartype: [
             {required: true, message: '', trigger: 'blur'}
+          ],
+           carsalingprice: [
+            {required: true, message: '请输入车辆指导价 示例：179,800元', trigger: 'blur'}
           ],
            ordertime: [
             {required: true, message: '', trigger: 'blur'}
@@ -347,6 +471,10 @@ import dateClum from "../common/dateClum"
           city: '',
           company: '',
           cartype: '',
+          carsalingprice: '',
+          carinvoiceprice: '',
+          carinsurance: '',
+          investsum: '',
           beianpeople: '',
           passedpeople: '',
           ordertime:'',
@@ -354,33 +482,67 @@ import dateClum from "../common/dateClum"
           finishpeople:'',
           fundsum:''
         },
-        addFormCityVisible: false,
-        addFormCity:
+        /*city*/
+        addCityFormVisible: false,
+        addCityForm:
         {
           city: '',
           province: '',
         },
-        addFormCityRules: {
-           city: [
+        addCityFormRules: {
+          city: [
             {required: true, message: '请输入城市名', trigger: 'blur'}
           ],
           province: [
-            {required: true, message: '请输入省名', trigger: 'blur'}]
-        
+            {required: true, message: '请输入省名', trigger: 'blur'}
+          ]
         },
-        addFormCompanyVisible: false,
-        addFormCompany:
+        showCityTableVisible:false,
+
+        editCityFormVisible:false,
+        editCityForm:{
+         city: '',
+          province: '',
+        },
+        editCityFormRules: {
+          city: [
+            {required: true, message: '请输入城市名', trigger: 'blur'}
+          ],
+          province: [
+            {required: true, message: '请输入省名', trigger: 'blur'}
+          ]
+        },
+
+      /*add company*/
+
+        addCompanyFormVisible: false,
+        addCompanyForm:
         {
           company: '',
         },
-        addFormCompanyRules: {
+        addCompanyFormRules: {
           company: [
             {required: true, message: '请输入公司名', trigger: 'blur'}
           ],
           
         },
-        addFormCartypeVisible: false,
-        addFormCartype:
+         showCompanyTableVisible:false,
+
+        editCompanyFormVisible:false,
+        editCompanyForm:{
+         company: '',
+        },
+        editCompanyFormRules: {
+          company: [
+            {required: true, message: '请输入公司名', trigger: 'blur'}
+          ]
+        },
+
+
+
+
+        addCartypeFormVisible: false,
+        addCartypeForm:
         {
           cartype: '',
           carsalingprice: '',
@@ -388,14 +550,28 @@ import dateClum from "../common/dateClum"
           carinsurance: '',
           investsum: ''
         },
-        addFormCartypeRules: {
+        addCartypeFormRules: {
           cartype: [
             {required: true, message: '请输入车辆类型 示例：东风日产牌+DFL7203VBL1', trigger: 'blur'}
           ],
           carsalingprice: [
             {required: true, message: '请输入车辆指导价 示例：179,800元', trigger: 'blur'}
           ]
-        }
+        },
+
+        showCartypeTableVisible:false,
+
+        editCartypeFormVisible:false,
+        editCartypeForm:{
+         cartype: '',
+        },
+        editCompanyFormRules: {
+          cartype: [
+            {required: true, message: '请输入车辆类型', trigger: 'blur'}
+          ]
+        },
+      
+        
 
       }
     },
@@ -408,13 +584,13 @@ import dateClum from "../common/dateClum"
  importExcel:function()
       {
           this.importExcelVisible = true;
-          this.$global.componentSelect().name = "kunpeng";
+          this.$global.componentSelect().name = "dingsheng";
       },
       exportExcel:function(date)
     {
         let that = this;
         let params = {
-         name:"kunpeng"
+         name:"dingsheng"
         }
        if(date == '')
        {
@@ -461,7 +637,7 @@ import dateClum from "../common/dateClum"
         }
         that.loading = true;
         that.$http.get(this.$global.remote().dingshengListByMonth, params, response => {
-          console.log("get kunpeng list")
+          console.log("get dingsheng list")
           if (that.$tools.isNotEmpty(response.result)) {
             
             
@@ -478,6 +654,7 @@ import dateClum from "../common/dateClum"
             let item = ''
             for(item in that.result)
             {
+             // console.log("car salingprice:"+that.result[item].carsalingprice)
               let tempDate = that.result[item].ordertime;
              
               that.result[item].ordertime = new Date(tempDate).toUTCString();
@@ -498,9 +675,74 @@ import dateClum from "../common/dateClum"
       })
        
       },
+
+      searchCity:function()
+      {
+         this.$http.get(this.$global.remote().dingshengCityList,{},response =>
+          {
+          let items = []
+          let item = ''
+          for(item in response.result)
+          {
+            let values ={}
+            values.city = response.result[item].city+"/"+response.result[item].province
+            values.key = item
+            items.push(values)
+            }
+          this.dingshengcitySelectCities = items
+          this.cityResult = response.result
+          console.log("dingshengcitySelectCities:"+this.dingshengcitySelectCities)
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+      },
+       searchCompany:function()
+      {
+         this.$http.get(this.$global.remote().dingshengCompanyList,{},response =>
+          {
+          let items = []
+          let item = ''
+          for(item in response.result)
+          {
+            let values ={}
+            values.company = response.result[item].company
+            values.key = item
+            items.push(values)
+            }
+          this.dingshengcitySelectCompany = items
+          this.companyResult = response.result
+         
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+      },
       selsChange: function (sels) {
         this.sels = sels;
       },
+      searchCartype:function()
+      {
+         this.$http.get(this.$global.remote().dingshengCartypeList,{},response =>
+          {
+          let items = []
+          let item = ''
+          for(item in response.result)
+          {
+            let values ={}
+            values.cartype = response.result[item].cartype
+            values.key = item
+            items.push(values)
+            }
+          this.dingshengcitySelectCartype = items
+          this.cartypeResult = response.result
+         
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+      },
+     
       //删除
       delBook: function (index, row) {
         let that = this;
@@ -529,6 +771,85 @@ import dateClum from "../common/dateClum"
         this.editForm = Object.assign({}, row);
       },
       //编辑
+      editCitySubmit: function () {
+        let that = this;
+        this.$refs.editCityForm.validate((valid) => {
+          if (valid) {
+            if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, this.editCityForm);
+          
+       
+          this.$http.post(this.$global.remote().dingshengCityUpdate, params, response => {
+                
+                console.log(response.result)
+                this.loading = false;
+                that.editCityFormVisible = false;
+                this.$message("编辑城市成功");
+               
+              
+            },fail =>{
+                self.tips = fail.message;
+                that.editCityFormVisible = false;
+                this.loading = false;
+            });
+          }
+          }
+        });
+      },
+      editCompanySubmit: function () {
+        let that = this;
+        this.$refs.editCompanyForm.validate((valid) => {
+          if (valid) {
+            if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, this.editCompanyForm);
+          
+       
+          this.$http.post(this.$global.remote().dingshengCompanyUpdate, params, response => {
+                
+                console.log(response.result)
+                this.loading = false;
+                that.editCompanyFormVisible = false;
+                this.$message("编辑城市成功");
+               this.searchCompany();
+              
+            },fail =>{
+                self.tips = fail.message;
+                that.editCompanyFormVisible = false;
+                this.loading = false;
+            });
+          }
+          }
+        });
+      },
+      editCartypeSubmit: function () {
+        let that = this;
+        this.$refs.editCartypeForm.validate((valid) => {
+          if (valid) {
+            if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, this.editCartypeForm);
+          
+       
+          this.$http.post(this.$global.remote().dingshengCartypeUpdate, params, response => {
+                
+                console.log(response.result)
+                this.loading = false;
+                that.editCartypeFormVisible = false;
+                this.$message("编辑城市成功");
+               this.searchCartype();
+              
+            },fail =>{
+                self.tips = fail.message;
+                that.editCartypeFormVisible = false;
+                this.loading = false;
+            });
+          }
+          }
+        });
+      },
+      //编辑
       editSubmit: function () {
         let that = this;
         this.$refs.editForm.validate((valid) => {
@@ -537,11 +858,7 @@ import dateClum from "../common/dateClum"
             that.loading = true;
             let params = Object.assign({}, this.editForm);
             console.log(this.editForm.city)
-            //params.city = this.kunpengcitySelectCities[this.editForm.city].city;
-           // params.company = this.kunpengcitySelectCompany[this.editForm.company].company;
-           // params.cartype = this.kunpengcitySelectCartype[this.editForm.cartype].cartype;
-          // console.log(params.kunpengDate.toLocaleDateString())
-           
+       
           this.$http.post(this.$global.remote().dingshengUpdate, params, response => {
                 
                 console.log(response.result)
@@ -565,6 +882,11 @@ import dateClum from "../common/dateClum"
           kunpengDate: '',
           city: '',
           company: '',
+          cartype:'',
+          carsalingprice: '',
+          carinvoiceprice: '',
+          carinsurance: '',
+          investsum: '',
           beianpeople: '',
           passedpeople: '',
           ordertime:'',
@@ -572,22 +894,70 @@ import dateClum from "../common/dateClum"
           finishpeople:'',
           fundsum:''
         };
-        this.kunpengcitySelect = '',
-        this.kunpengcompanySelect = '';
-        this.kunpengcartypeSelect = '';
+        this.dingshengcitySelect = '',
+        this.dingshengcompanySelect = '';
+        this.dingshengcartypeSelect = '';
+        this.searchCity()
+        this.searchCompany()
+        this.searchCartype()
       },
       showAddDialogCity: function () {
-        this.addFormCityVisible = true;
-        this.addFormCity = {
+        this.addCityFormVisible = true;
+        this.showCityTableVisible=false;
+        
+        this.addCityForm = {
           city: '',
           province: '',
           
         };
         
       },
+      showCityEditDialog:function(index,row)
+      {
+        this.editCityFormVisible = true;
+        this.editCityForm = Object.assign({}, row);
+      },
+      showCompanyEditDialog:function(index,row)
+      {
+        this.editCompanyFormVisible = true;
+        this.editCompanyForm = Object.assign({}, row);
+      },
+      showCartypeEditDialog:function(index,row)
+      {
+        this.editCartypeFormVisible = true;
+        this.editCartypeForm = Object.assign({}, row);
+      },
+      showAddCityTable: function () {
+        this.showCityTableVisible = true;
+        this.searchCity();
+        
+      },
+       showAddCompanyTable: function () {
+        this.showCompanyTableVisible = true;
+        this.searchCompany();
+        
+      },
+       showAddCartypeTable: function () {
+        this.showCartypeTableVisible = true;
+        this.searchCartype();
+        
+      },
+      disableAddCityTable:function()
+      {
+        this.showCityTableVisible = false;
+      },
+       disableAddCompanyTable:function()
+      {
+        this.showCompanyTableVisible = false;
+      },
+       disableAddCartypeTable:function()
+      {
+        this.showCartypeTableVisible = false;
+      },
        showAddDialogCompany: function () {
-        this.addFormCompanyVisible = true;
-        this.addFormCompany = {
+        this.addCompanyFormVisible = true;
+        this.showCompanyTableVisible = false;
+        this.addCompanyForm = {
           company: '',
           
           
@@ -595,8 +965,9 @@ import dateClum from "../common/dateClum"
         
       },
        showAddDialogCartype: function () {
-        this.addFormCartypeVisible = true;
-        this.addFormCartype = {
+        this.addCartypeFormVisible = true;
+        this.showCartypeTableVisible = false;
+        this.addCartypeForm = {
            cartype: '',
           carsalingprice: '',
           carinvoiceprice: '',
@@ -610,75 +981,75 @@ import dateClum from "../common/dateClum"
       addCitySubmit:function()
       {
         let that = this;
-        that.$refs.addFormCity.validate((valid) => {
+        that.$refs.addCityForm.validate((valid) => {
           if (valid) {
             this.loading = true;
-            let params = Object.assign({}, this.addFormCity);
+            let params = Object.assign({}, this.addCityForm);
             console.log("addCity submit:"+params);
             this.$http.post(this.$global.remote().dingshengCityInsert, params, response => {
                 
                 console.log(response.result)
                 this.$message("城市添加成功");
                 this.loading = false;
-                that.addFormCityVisible = false;
+                that.addCityFormVisible = false;
               
             },fail =>{
                 self.tips = fail.message;
-                that.addFormCityVisible = false;
+                that.addCityFormVisible = false;
                 this.loading = false;
             });
           }
         });
-        that.addFormCityVisible = false; 
+        that.addCityFormVisible = false; 
       },
       addCompanySubmit:function()
       {
         let that = this;
-        that.$refs.addFormCompany.validate((valid) => {
+        that.$refs.addCompanyForm.validate((valid) => {
           if (valid) {
             this.loading = true;
-            let params = Object.assign({}, this.addFormCompany);
+            let params = Object.assign({}, this.addCompanyForm);
             console.log("addCompany submit:"+params);
             this.$http.post(this.$global.remote().dingshengCompanyInsert, params, response => {
                 
                 console.log(response.result)
                 this.$message("公司添加成功");
                 this.loading = false;
-                that.addFormCompanyVisible = false;
+                that.addCompanyFormVisible = false;
               
             },fail =>{
                 self.tips = fail.message;
-                that.addFormCompanyVisible = false;
+                that.addCompanyFormVisible = false;
                 this.loading = false;
             });
           }
         });
-        that.addFormCompanyVisible = false; 
+        that.addCompanyFormVisible = false; 
       },
 
     addCartypeSubmit:function()
       {
         let that = this;
-        that.$refs.addFormCartype.validate((valid) => {
+        that.$refs.addCartypeForm.validate((valid) => {
           if (valid) {
             this.loading = true;
-            let params = Object.assign({}, this.addFormCartype);
+            let params = Object.assign({}, this.addCartypeForm);
             console.log("addCartype submit:"+params);
             this.$http.post(this.$global.remote().dingshengCartypeInsert, params, response => {
                 
                 console.log(response.result)
                 this.$message("车型添加成功");
                 this.loading = false;
-                that.addFormCartypeVisible = false;
+                that.addCartypeFormVisible = false;
               
             },fail =>{
                 self.tips = fail.message;
-                that.addFormCartypeVisible = false;
+                that.addCartypeFormVisible = false;
                 this.loading = false;
             });
           }
         });
-        that.addFormCompanyVisible = false; 
+        that.addCompanyFormVisible = false; 
       },
       addSubmit: function () {
         let that = this;
@@ -686,9 +1057,9 @@ import dateClum from "../common/dateClum"
           if (valid) {
             that.loading = true;
             let params = Object.assign({}, this.addForm);
-            params.city = this.kunpengcitySelectCities[this.addForm.city].city;
-            params.company = this.kunpengcitySelectCompany[this.addForm.company].company;
-            params.cartype = this.kunpengcitySelectCartype[this.addForm.cartype].cartype;
+            params.city = this.dingshengcitySelectCities[this.addForm.city].city;
+            params.company = this.dingshengcitySelectCompany[this.addForm.company].company;
+            params.cartype = this.dingshengcitySelectCartype[this.addForm.cartype].cartype;
            console.log(params.kunpengDate.toLocaleDateString())
            
           this.$http.post(this.$global.remote().dingshengInsert, params, response => {
@@ -722,6 +1093,41 @@ import dateClum from "../common/dateClum"
                 this.$message("数据删除成功");
                 this.loading = false;
                 
+              
+            },fail =>{
+                self.tips = fail.message;
+                this.loading = false;
+            });
+          that.loading = false;
+        }).catch(() => {
+        });
+      },
+      deleteByID:function(index,row,url)
+      {
+        let that = this;
+        this.$confirm('确认删除该记录吗?', '提示', {type: 'warning'}).then(() => {
+          that.loading = true;
+          //let params=Object.assign({}, row);
+          let params = {}
+          params.tid = row.tid;
+          console.log("url:"+url)
+           this.$http.post(url, params, response => {
+                
+                console.log(response.result)
+                this.$message("数据删除成功");
+                this.loading = false;
+                if( url == this.url_dingshengCityDelete)
+                {
+                  this.searchCity();
+                }
+                else if( url == this.url_dingshengCompanyDelete)
+                {
+                  this.searchCompany();
+                }
+                else if( url == this.url_dingshengCartypeDelete)
+                {
+                  this.searchCartype();
+                }
               
             },fail =>{
                 self.tips = fail.message;
@@ -776,13 +1182,13 @@ import dateClum from "../common/dateClum"
       values.key = item
       items.push(values)
       }
-    this.kunpengcitySelectCities = items
-    console.log("kunpengcitySelectCities:"+this.kunpengcitySelectCities)
+    this.dingshengcitySelectCities = items
+    console.log("dingshengcitySelectCities:"+this.dingshengcitySelectCities)
   },fail=>
   {
     this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
   });
-  //that.kunpengcitySelectCities = this.$global.getKunPengCity(that);
+  //that.dingshengcitySelectCities = this.$global.getdingshengCity(that);
   this.$http.get(this.$global.remote().dingshengCompanyList,{},response =>
   {
     
@@ -795,7 +1201,7 @@ import dateClum from "../common/dateClum"
       values.key = item
       items.push(values)
       }
-    this.kunpengcitySelectCompany = items
+    this.dingshengcitySelectCompany = items
    
   },fail=>
   {
@@ -814,7 +1220,7 @@ import dateClum from "../common/dateClum"
       values.key = item
       items.push(values)
       }
-    this.kunpengcitySelectCartype = items
+    this.dingshengcitySelectCartype = items
    
   },fail=>
   {
