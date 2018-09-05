@@ -314,7 +314,7 @@
       </el-dialog>
       <!-- add cartype -->
     <!--新增界面-->
-      <el-dialog title="新增车型" :visible.sync ="addCartypeFormVisible" :close-on-click-modal="false" width="30%">
+      <el-dialog title="新增车型" :visible.sync ="addCartypeFormVisible" :close-on-click-modal="false">
         <el-form :model="addCartypeForm" label-width="100px" :rules="addCartypeFormRules" ref="addCartypeForm">
           <el-form-item label="车辆型号" prop="cartype">
             <el-input v-model="addCartypeForm.cartype" auto-complete="off"></el-input>
@@ -382,6 +382,17 @@ import dateClum from "../common/dateClum"
  import uploaddialog from "../common/upload"
   export default{
     data(){
+       let multiplyFundSum = (rule, value, callback) => {
+          
+        if (value === '') {
+          callback(new Error('请输入数字'));
+        } else if (this.$tools.isNotEmpty(value) && this.$tools.isNotEmpty(this.addForm.investsum)) {
+           this.addForm.fundsum = value*this.addForm.investsum
+          callback();
+        } else {
+          callback();
+        }
+      };
       return {
         filters: {
           name: ''
@@ -393,6 +404,7 @@ import dateClum from "../common/dateClum"
         cityResult:[],
         companyResult:[],
         cartypeResult:[],
+        dateConvertResult:[],
         total: 0,
         page: 1,
         limit: 10,
@@ -454,7 +466,7 @@ import dateClum from "../common/dateClum"
             {required: true, message: '', trigger: 'blur'}
           ],
           beianpeople: [
-            {required: true, pattern: /\d+/, message: '只能输入数字', trigger: 'blur'}
+            {required: true, pattern: /\d+/, validator:multiplyFundSum,message: '只能输入数字', trigger: 'blur'}
           ],
           passedpeople: [
             {required: true, pattern: /\d+/, message: '只能输入数字', trigger: 'blur'}
@@ -657,10 +669,10 @@ import dateClum from "../common/dateClum"
              // console.log("car salingprice:"+that.result[item].carsalingprice)
               let tempDate = that.result[item].ordertime;
              
-              that.result[item].ordertime = new Date(tempDate).toUTCString();
+              that.result[item].ordertime = new Date(tempDate).toLocaleDateString();
              
               tempDate = that.result[item].finishtime;
-              that.result[item].finishtime = new Date(tempDate).toUTCString();
+              that.result[item].finishtime = new Date(tempDate).toLocaleDateString();
             }
           }
 

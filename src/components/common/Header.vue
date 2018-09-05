@@ -2,7 +2,7 @@
     <div class="header">
 
         <img class="logoimage" src="../../assets/inLOGO.png"/>
-        <div class="logo">汇聚互联融资租赁业务管理系统</div>
+        <div class="logo">汇聚互联融资租赁服务平台</div>
         <div class="login-name"><span>登录人:</span>&nbsp;<span>{{currUserName}}</span></div>
         <!--<div class="login-name"><span>当前部门:</span>&nbsp;<span>{{currDeptName}}</span></div>-->
         <div class="user-info">
