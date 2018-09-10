@@ -540,6 +540,18 @@
         });*/
 
       },
+      searchCompany:function()
+      {
+        this.$http.get(this.$global.remote().fundEfficientCompanyList,{},response =>
+          {
+            this.companyResult = response.result
+          
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+
+      },
       searchFundUsage:function()
       {
          this.$http.get(this.$global.remote().fundEfficientFundUsageList,{},response =>
@@ -601,7 +613,7 @@
            this.$http.post(this.$global.remote().fundEfficientFundUsageDelete, params, response => {
  
                 this.$message("数据删除成功");
-                this.searchFundUsage();
+                
       
             },fail =>{
                 self.tips = fail.message;
@@ -622,7 +634,7 @@
            this.$http.post(this.$global.remote().fundEfficientCompanyDelete, params, response => {
  
                 this.$message("数据删除成功");
-      
+            this.searchCompany()
             },fail =>{
                 self.tips = fail.message;
                
