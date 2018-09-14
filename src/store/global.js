@@ -69,6 +69,7 @@ global.remoteUrl = {
 
     //fund efficient
     fundEfficientListByMonth: '/fundEfficient/listbyMonth',
+    fundEfficientListByUsageAndMonth: '/fundEfficient/listByUsageMonth',
     fundEfficientInsert: '/fundEfficient/insert',
     fundEfficientDelete: '/fundEfficient/delete',
     fundEfficientUpdate: '/fundEfficient/update',
@@ -342,24 +343,24 @@ export default {
     haveUserPermissionNotRole: function(path) {
         const self = this;
         /*
-        let params = {
-            userName: JSON.parse(sessionStorage.getItem('userInfo')).userName,
-        };
+                let params = {
+                    userName: JSON.parse(sessionStorage.getItem('userInfo')).userName,
+                };
         
-        apiAxios.get("/userPermissionNotRole", params, response => {
-            console.log("get user permission not rolebased")
-            if (tools.isNotEmpty(response.result)) {
-                let userPermission = response.result;
-                global.userPermissionNotRole = userPermission;
-                console.log("get user permission:" + userPermission)
-                global.tempGranted = false;
-                
+                apiAxios.get("/userPermissionNotRole", params, response => {
+                    console.log("get user permission not rolebased")
+                    if (tools.isNotEmpty(response.result)) {
+                        let userPermission = response.result;
+                        global.userPermissionNotRole = userPermission;
+                        console.log("get user permission:" + userPermission)
+                        global.tempGranted = false;
+                        
 
 
-            }
-        }, fail => {
-            Message.error(fail.message);
-        })*/
+                    }
+                }, fail => {
+                    Message.error(fail.message);
+                })*/
         let key = ''
         global.tempGranted = false;
         for (key in global.userPermissionNotRole) {

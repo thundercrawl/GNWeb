@@ -86,11 +86,11 @@
       
     <!-- edit dialog -->
       <el-dialog title="编辑" :visible.sync ="editFormVisible" :close-on-click-modal="false">
-        <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+        <el-form :model="editForm" label-width="80px" :rules="addFormRules" ref="editForm">
           
          
           <el-form-item label="创建日期">
-            <el-date-picker type="date" placeholder="选择日期" v-model="editForm.kunpengDate"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择日期" v-model="editForm.dingshengDate"></el-date-picker>
           </el-form-item>
 
           <el-form-item label="城市">
@@ -139,7 +139,7 @@
             <el-input v-model="editForm.finishpeople" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="总融资额" prop="fundsum">
-            <el-input v-model="editForm.fundsum" auto-complete="off"></el-input>
+            <el-input @click.native="autoFillFundSum('edit')" v-model="editForm.fundsum" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -148,15 +148,39 @@
         </div>
       </el-dialog>
 
+        <el-dialog title="编辑资金用途" :visible.sync ="editFundUsageFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="editFundUsageForm" label-width="180px"   :rules="editFundUsageFormRules" ref="editFundUsageForm">
+          <el-form-item label="资金用途" prop="fundUsage">
+            <el-input v-model="editFundUsageForm.fundUsage" auto-complete="off"></el-input>
+          </el-form-item>
+           
+           
+         
+
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+        
+          <el-button @click.native="editFundUsageFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="editFundUsageSubmit" :loading="addLoading">提交</el-button>       
+        </div>
+      </el-dialog>
       <!--新增dingsheng-->
       <el-dialog title="新增业务" :visible.sync ="addFormVisible" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
           
          
-          <el-form-item label="创建日期" prop="kunpengDate">
-            <el-date-picker type="date" placeholder="选择日期" v-model="addForm.kunpengDate"></el-date-picker>
+          <el-form-item label="创建日期" prop="dingshengDate">
+            <el-date-picker type="date" placeholder="选择日期" v-model="addForm.dingshengDate"></el-date-picker>
           </el-form-item>
-
+          
+           <el-form-item label="资金用途" prop="fundUsage">
+                    <el-select v-model="addForm.fundUsage" placeholder="请选择">
+                        
+                        <el-option v-for="item in fundEfficientFundUsageSelectItems" :label="item.label" :value="item.key" :key="item.key"></el-option>
+                    </el-select>
+                      <el-button type="text" @click="showAddFundUsageDialog" auto-complete="off"> 添加修改>></el-button>
+        </el-form-item>
           <el-form-item label="城市" prop="city">
                     <el-select v-model="addForm.city" placeholder="请选择">
                         
@@ -188,10 +212,10 @@
             <el-input v-model="addForm.investsum" placeholder="只接受数字" auto-complete="off"></el-input>
           </el-form-item>
         <el-form-item label="备案人数"  prop="beianpeople">
-            <el-input v-model="addForm.beianpeople" placeholder="只接受数字" auto-complete="off"></el-input>
+            <el-input v-model="addForm.beianpeople" placeholder="只接受整数" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="过审人数"  prop="passedpeople">
-            <el-input v-model="addForm.passedpeople" placeholder="只接受数字" auto-complete="off"></el-input>
+            <el-input v-model="addForm.passedpeople" placeholder="只接受整数" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="下单时间" prop="ordertime">
             <el-date-picker type="date" placeholder="选择日期" v-model="addForm.ordertime"></el-date-picker>
@@ -200,15 +224,52 @@
             <el-date-picker type="date" placeholder="选择日期" v-model="addForm.finishtime"></el-date-picker>
           </el-form-item>
           <el-form-item label="完成人数" prop="finishpeople">
-            <el-input v-model="addForm.finishpeople"  placeholder="只接受数字" auto-complete="off"></el-input>
+            <el-input v-model="addForm.finishpeople"  placeholder="只接受整数" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="总融资额" prop="fundsum">
-            <el-input v-model="addForm.fundsum"  placeholder="只接受数字" auto-complete="off"></el-input>
+            <el-input v-model="addForm.fundsum"  @click.native="autoFillFundSum('add')" placeholder="只接受数字" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click.native="addFormVisible = false">取消</el-button>
           <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        </div>
+      </el-dialog>
+ <!-- add fundusage-->
+      <el-dialog title="新增资金用途" :visible.sync ="addFundUsageFormVisible" :close-on-click-modal="false" width="300">
+        <el-form :model="addFundUsageForm" label-width="180px"  :rules="addFundUsageFormRules"  ref="addFundUsageForm">
+          <el-form-item label="资金用途" prop="fundUsage">
+            <el-input v-model="addFundUsageForm.fundUsage" auto-complete="off"></el-input>
+          </el-form-item>
+           
+           
+         
+
+        </el-form>
+        
+        <div slot="footer" class="dialog-footer">
+          
+          <el-button type="text" @click.native="showAddFundUsageTable" style="float:left"> 管理资金用途>></el-button>
+          <el-button type="text" @click.native="disableAddFundUsageTable" style="float:left" v-show="showFundUsageTableVisible"> <<收起列表</el-button>
+          <el-button @click.native="addFundUsageFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="addFundUsageSubmit" :loading="addLoading">提交</el-button>
+
+        
+        <el-table border stripe :data="fundUsageResult" highlight-current-row @selection-change="selsChange"
+                style="width: 100%;" :row-class-name="customizedGrayFont" v-show="showFundUsageTableVisible">
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column prop="fundUsage" label="资金用途"  ></el-table-column>
+        
+        <el-table-column v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/edit')" label="操作" width="150">
+          <template slot-scope="scope">
+           <el-button size="small"  @click="showFundUsageEditDialog(scope.$index,scope.row)">编辑</el-button>
+            <el-button type="danger" @click="deleteByID(scope.$index,scope.row,url_fundEfficientFundUsageDelete)" size="small">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    
+        
         </div>
       </el-dialog>
 
@@ -314,7 +375,7 @@
       </el-dialog>
       <!-- add cartype -->
     <!--新增界面-->
-      <el-dialog title="新增车型" :visible.sync ="addCartypeFormVisible" :close-on-click-modal="false">
+      <el-dialog title="新增车型" :visible.sync ="addCartypeFormVisible" :close-on-click-modal="false" >
         <el-form :model="addCartypeForm" label-width="100px" :rules="addCartypeFormRules" ref="addCartypeForm">
           <el-form-item label="车辆型号" prop="cartype">
             <el-input v-model="addCartypeForm.cartype" auto-complete="off"></el-input>
@@ -382,29 +443,32 @@ import dateClum from "../common/dateClum"
  import uploaddialog from "../common/upload"
   export default{
     data(){
-       let multiplyFundSum = (rule, value, callback) => {
+
+      let multiplyFundSum = (rule, value, callback) => {
           
         if (value === '') {
           callback(new Error('请输入数字'));
         } else if (this.$tools.isNotEmpty(value) && this.$tools.isNotEmpty(this.addForm.investsum)) {
-           this.addForm.fundsum = value*this.addForm.investsum
+           this.addForm.fundsum = (value*this.addForm.investsum).toFixed(4)
+           
           callback();
         } else {
           callback();
         }
       };
       return {
+
         filters: {
           name: ''
         },
         url_dingshengCityDelete:this.$global.remote().dingshengCityDelete,
         url_dingshengCompanyDelete:this.$global.remote().dingshengCompanyDelete,
         url_dingshengCartypeDelete:this.$global.remote().dingshengCartypeDelete,
+        url_fundEfficientFundUsageDelete:this.$global.remote().fundEfficientFundUsageDelete,
         result: [],
         cityResult:[],
         companyResult:[],
         cartypeResult:[],
-        dateConvertResult:[],
         total: 0,
         page: 1,
         limit: 10,
@@ -421,14 +485,15 @@ import dateClum from "../common/dateClum"
         //编辑相关数据
         editFormVisible: false,//编辑界面是否显示
         editFormRules: {
-          kunpengDate: [
+          dingshengDate: [
             {required: true, message: '请输入业务创建日期', trigger: 'blur'}
           ],
           
         },
         editForm: {
           id: 0,
-          kunpengDate: '',
+          dingshengDate: '',
+          fundUsage:'',
           city: '',
           company: '',
           cartype: '',
@@ -444,7 +509,10 @@ import dateClum from "../common/dateClum"
         addFormVisible: false,//新增界面是否显示
         addLoading: false,
         addFormRules: {
-           kunpengDate: [
+           dingshengDate: [
+            {required: true, message: '', trigger: 'blur'}
+          ],
+          fundUsage:[
             {required: true, message: '', trigger: 'blur'}
           ],
            city: [
@@ -457,7 +525,7 @@ import dateClum from "../common/dateClum"
             {required: true, message: '', trigger: 'blur'}
           ],
            carsalingprice: [
-            {required: true, message: '请输入车辆指导价 示例：179,800元', trigger: 'blur'}
+            {required: true,  pattern: /^\d*\.?\d*$/,message: '只能输入数字', trigger: 'blur'}
           ],
            ordertime: [
             {required: true, message: '', trigger: 'blur'}
@@ -466,20 +534,22 @@ import dateClum from "../common/dateClum"
             {required: true, message: '', trigger: 'blur'}
           ],
           beianpeople: [
-            {required: true, pattern: /\d+/, validator:multiplyFundSum,message: '只能输入数字', trigger: 'blur'}
+            {required: true, pattern: /^\d+$/, message: '只能输入整数', trigger: 'blur'}
           ],
           passedpeople: [
-            {required: true, pattern: /\d+/, message: '只能输入数字', trigger: 'blur'}
+            {required: true, pattern: /^\d+$/, message: '只能输入整数', trigger: 'blur'}
           ],
           finishpeople: [
-            {required: true,pattern: /\d+/, message: '只能输入数字', trigger: 'blur'}
+            {required: true,pattern: /^\d+$/, message: '只能输入整数', trigger: 'blur'}
           ],
           fundsum: [
-            {required: true,pattern: /\d+/, message: '只能输入数字', trigger: 'blur'}
-          ]
+            {required: true,pattern: /^\d*\.?\d*$/, message: '只能输入数字', trigger: 'blur'}
+          ],
+          
         },
         addForm: {
-          kunpengDate: '',
+          dingshengDate: '',
+          fundUsage:'',
           city: '',
           company: '',
           cartype: '',
@@ -583,6 +653,30 @@ import dateClum from "../common/dateClum"
           ]
         },
       
+        /*fundusage*/
+        addFundUsageFormVisible: false,
+        fundEfficientFundUsageSelect: '',
+        fundEfficientFundUsageSelectItems:[],
+        addFundUsageForm: {
+          fundUsage: ''
+        },
+        addFundUsageFormRules: {
+          fundUsage: [
+            {required: true, message: '请输入融资租赁公司', trigger: 'blur'}
+          ]
+        },
+      
+        showFundUsageTableVisible:false,
+
+        editFundUsageFormVisible:false,
+        editFundUsageForm:{
+          fundUsage: ''
+        },
+        editFundUsageFormRules: {
+          fundUsage: [
+            {required: true, message: '请输入融资租赁公司', trigger: 'blur'}
+          ]
+        },
         
 
       }
@@ -592,6 +686,26 @@ import dateClum from "../common/dateClum"
            uploaddialog:uploaddialog,
         },
     methods: {
+      autoFillFundSum(item)
+      {
+        console.log("auto fill fundsum field")
+        if(item == "add")
+        {
+        if (this.$tools.isNotEmpty(this.addForm.finishpeople) && this.$tools.isNotEmpty(this.addForm.investsum)) {
+           this.addForm.fundsum = (this.addForm.finishpeople*this.addForm.investsum).toFixed(4)
+        }
+        else
+          this.addForm.fundsum = 0
+          }
+        else if( item == "edit")
+        {
+          if (this.$tools.isNotEmpty(this.editForm.finishpeople) && this.$tools.isNotEmpty(this.editForm.investsum)) {
+           this.editForm.fundsum = (this.editForm.finishpeople*this.editForm.investsum).toFixed(4)
+        }
+        else
+          this.editForm.fundsum = 0
+        }
+      },
 
  importExcel:function()
       {
@@ -725,6 +839,26 @@ import dateClum from "../common/dateClum"
           this.dingshengcitySelectCompany = items
           this.companyResult = response.result
          
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+      },
+      searchFundUsage:function()
+      {
+         this.$http.get(this.$global.remote().fundEfficientFundUsageList,{},response =>
+          {
+             let items = []
+            let item = ''
+            for(item in response.result)
+            {
+              let values ={}
+              values.label = response.result[item].fundUsage
+              values.key = item
+              items.push(values)
+              }
+            this.fundEfficientFundUsageSelectItems = items
+            this.fundUsageResult = response.result
           },fail=>
           {
             this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
@@ -870,7 +1004,8 @@ import dateClum from "../common/dateClum"
             that.loading = true;
             let params = Object.assign({}, this.editForm);
             console.log(this.editForm.city)
-       
+          params.ordertime = new Date(this.editForm.ordertime).toUTCString()
+          params.finishtime = new Date(this.editForm.finishtime).toUTCString()
           this.$http.post(this.$global.remote().dingshengUpdate, params, response => {
                 
                 console.log(response.result)
@@ -888,10 +1023,35 @@ import dateClum from "../common/dateClum"
           }
         });
       },
+      editFundUsageSubmit:function()
+      {
+         let that = this;
+        this.$refs.editFundUsageForm.validate((valid) => {
+          if (valid) {
+            if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, this.editFundUsageForm);
+           
+          this.$http.post(this.$global.remote().fundEfficientFundUsageUpdate, params, response => {
+                
+                console.log(response.result)
+                this.loading = false;
+                that.editFundUsageFormVisible = false;
+                this.$message("编辑资金用途成功");
+                this.searchFundUsage();
+            },fail =>{
+                self.tips = fail.message;
+                that.editCompanyFormVisible = false;
+                this.loading = false;
+            });
+          }
+          }
+        });
+      },
       showAddDialog: function () {
         this.addFormVisible = true;
         this.addForm = {
-          kunpengDate: '',
+          dingshengDate: '',
           city: '',
           company: '',
           cartype:'',
@@ -939,6 +1099,12 @@ import dateClum from "../common/dateClum"
         this.editCartypeFormVisible = true;
         this.editCartypeForm = Object.assign({}, row);
       },
+       showFundUsageEditDialog: function (index, row) {
+        this.editFundUsageFormVisible = true;
+        this.editFundUsageForm = Object.assign({}, row);
+      
+       // this.editForm.fundSource = 
+      },
       showAddCityTable: function () {
         this.showCityTableVisible = true;
         this.searchCity();
@@ -953,6 +1119,29 @@ import dateClum from "../common/dateClum"
         this.showCartypeTableVisible = true;
         this.searchCartype();
         
+      },
+
+       showAddFundUsageDialog: function () {
+        this.addFundUsageFormVisible = true;
+        this.showFundUsageTableVisible = false;
+        this.addFundUsageForm = {
+          fundUsage: ''
+        };
+      },
+      showAddFundUsageTable: function() {
+     
+        this.showFundUsageTableVisible = true;
+        
+         this.$http.get(this.$global.remote().fundEfficientFundUsageList,{},response =>
+          {
+            this.fundUsageResult = response.result
+          
+          },fail=>
+          {
+            this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
+          }); 
+
+
       },
       disableAddCityTable:function()
       {
@@ -1063,6 +1252,29 @@ import dateClum from "../common/dateClum"
         });
         that.addCompanyFormVisible = false; 
       },
+      //add fundusage
+      addFundUsageSubmit: function () {
+        let that = this;
+        that.$refs.addFundUsageForm.validate((valid) => {
+          if (valid) {
+            that.loading = true;
+            let params = Object.assign({}, that.addFundUsageForm);       
+          that.$http.post(this.$global.remote().fundEfficientFundUsageInsert, params, response => {
+              
+                console.log(response.result)
+                this.loading = false;
+                that.addFundUsageFormVisible = false;
+                this.$message("添加资金用途成功");
+               this.searchFundUsage()
+              
+            },fail =>{
+                self.tips = fail.message;
+                that.addFundUsageFormVisible = false;
+                this.loading = false;
+            });
+          }
+        });
+      },
       addSubmit: function () {
         let that = this;
         this.$refs.addForm.validate((valid) => {
@@ -1072,7 +1284,8 @@ import dateClum from "../common/dateClum"
             params.city = this.dingshengcitySelectCities[this.addForm.city].city;
             params.company = this.dingshengcitySelectCompany[this.addForm.company].company;
             params.cartype = this.dingshengcitySelectCartype[this.addForm.cartype].cartype;
-           console.log(params.kunpengDate.toLocaleDateString())
+            params.fundUsage = this.fundEfficientFundUsageSelectItems[this.addForm.fundUsage].label;
+           console.log(params.dingshengDate.toLocaleDateString())
            
           this.$http.post(this.$global.remote().dingshengInsert, params, response => {
                 
@@ -1139,6 +1352,10 @@ import dateClum from "../common/dateClum"
                 else if( url == this.url_dingshengCartypeDelete)
                 {
                   this.searchCartype();
+                }
+                else if( url == this.url_fundEfficientFundUsageDelete)
+                {
+                  this.searchFundUsage();
                 }
               
             },fail =>{
@@ -1238,6 +1455,8 @@ import dateClum from "../common/dateClum"
   {
     this.$message("操作出错,状态:"+fail.status+"消息:"+fail.message)
   }); 
+
+   this.searchFundUsage();
     },
 
     computed : {

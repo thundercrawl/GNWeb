@@ -146,14 +146,14 @@
         
 
           <el-form-item label="月可放款总额" prop="monthlyFundSum">
-            <el-input v-model="addForm.monthlyFundSum" auto-complete="off"></el-input>
+            <el-input  v-model="addForm.monthlyFundSum" auto-complete="off"></el-input>
           </el-form-item>
 
           <el-form-item label="已放款总额" prop="alreadyLentFundSum">
-            <el-input v-model="addForm.alreadyLentFundSum" auto-complete="off"></el-input>
+            <el-input @click.native="autofillAlreadyLentFundSum" v-model="addForm.alreadyLentFundSum" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="当月剩余款项" prop="leftFundSum">
-            <el-input v-model="addForm.leftFundSum" auto-complete="off"></el-input>
+            <el-input @click.native="autofillLeftFundSum" v-model="addForm.leftFundSum" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
 
@@ -453,6 +453,33 @@
         },
     methods: {
     
+    autofillAlreadyLentFundSum()
+    {
+      console.log("autofillAlreadyLentFundSum")
+       let that = this;
+       
+            let params = Object.assign({}, that.addForm);
+            params.fundUsage = this.fundEfficientFundUsageSelectItems[this.fundEfficientFundUsageSelect].label
+            params.fundSource = this.fundEfficientCompanySelectItems[this.fundEfficientCompanySelect].company      
+          that.$http.post(this.$global.remote().fundEfficientListByUsageAndMonth, params, response => {
+              
+                console.log("autofill alreadyLentFundSum:"+response.result)
+              
+               that.addForm.alreadyLentFundSum = response.result.alreadyLentFundSum
+               // this.$message("新建资金条目成功");
+               
+              
+            },fail =>{
+                self.tips = fail.message;
+              
+            });
+       
+    },
+    autofillLeftFundSum()
+    {
+      this.addForm.leftFundSum = this.addForm.monthlyFundSum - this.addForm.alreadyLentFundSum
+    },
+
     changeFundUsageItems:function()
     {},
     exportExcel:function(date)
@@ -614,7 +641,7 @@
  
                 this.$message("数据删除成功");
                 
-      
+              this.searchFundUsage()
             },fail =>{
                 self.tips = fail.message;
                
