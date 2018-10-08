@@ -114,7 +114,7 @@
                     param.userInfoDTO = JSON.parse(sessionStorage.getItem('userInfo'))
                     console.log("user info:"+param.userInfoDTO)
                     param.userInfoDTO.password= this.addForm.p1;
-                    this.$http.post(this.$global.remote.remote().userUpdate, param, response => {
+                    this.$http.post(this.$global.remote().userUpdatePWD, param, response => {
                    this.$message("修改密码成功")
                 }, fail => {
                     this.$message.error(fail.message);

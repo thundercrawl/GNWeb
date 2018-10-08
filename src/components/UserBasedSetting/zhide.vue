@@ -131,7 +131,7 @@
         
         <div slot="footer" class="dialog-footer">
           <el-button @click.native="importExcelVisible = false">取消</el-button>
-          <el-button type="primary" @click.native="addSubmitFundSource" :loading="addLoading">提交</el-button>
+          <el-button type="primary" @click.native="submitUpload('finish')" :loading="addLoading">完成</el-button>
         </div>
       </el-dialog>
     </el-col>
@@ -220,13 +220,20 @@ import config from '../../config.js'
             uploaddialog:uploaddialog
         },
     methods: {
-    submitUpload() {
+    submitUpload(finish) {
        
-          this.formdata.tid = this.uploadContractTid;
-          this.$refs.uploadContractFile.submit();
-         this.$message('上传完毕')
-         this.$global.remote().zhideTid = ''
-         this.fileList = []
+      
+    
+      this.formdata.tid = this.uploadContractTid;
+      this.$refs.uploadContractFile.submit();
+      this.$message('上传完毕')
+      this.$global.remote().zhideTid = ''
+      this.fileList = []
+      if(finish == "finish")
+      {
+          this.uploadContractVisible = false;
+          this.search();
+      }
       },
       handleRemove(file, fileList) {
        console.log(file, fileList);
@@ -327,6 +334,7 @@ import config from '../../config.js'
                 this.$message("数据更新成功");
                 this.loading = false;
                 that.editFormVisible = false;
+                this.search()
               
             },fail =>{
                 self.tips = fail.message;

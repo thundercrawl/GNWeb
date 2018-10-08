@@ -60,6 +60,7 @@
         <el-table-column prop="finishtime" label="完成时间" ></el-table-column>
         <el-table-column prop="finishpeople" label="完成人数" ></el-table-column>
         <el-table-column prop="fundsum" label="总融资额" ></el-table-column>
+        <el-table-column prop="fundUsage" label="用途" ></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>
@@ -92,7 +93,13 @@
           <el-form-item label="创建日期">
             <el-date-picker type="date" placeholder="选择日期" v-model="editForm.kunpengDate"></el-date-picker>
           </el-form-item>
-
+          <el-form-item label="资金用途" prop="fundUsage">
+                    <el-select v-model="editForm.fundUsage" placeholder="请选择">
+                        
+                        <el-option v-for="item in fundEfficientFundUsageSelectItems" :label="item.label" :value="item.key" :key="item.key"></el-option>
+                    </el-select>
+                      <el-button type="text" @click="showAddFundUsageDialog" auto-complete="off"> 添加修改>></el-button>
+        </el-form-item>
           <el-form-item label="城市">
                     <el-select v-model="editForm.city" placeholder="请选择">
                         
@@ -485,8 +492,42 @@ import dateClum from "../common/dateClum"
         //编辑相关数据
         editFormVisible: false,//编辑界面是否显示
         editFormRules: {
-          kunpengDate: [
-            {required: true, message: '请输入业务创建日期', trigger: 'blur'}
+         
+           kunpengDate: [
+            {required: true, message: '', trigger: 'blur'}
+          ],
+          fundUsage:[
+            {required: true, message: '', trigger: 'blur'}
+          ],
+           city: [
+            {required: true, message: '', trigger: 'blur'}
+          ],
+           company: [
+            {required: true, message: '', trigger: 'blur'}
+          ],
+           cartype: [
+            {required: true, message: '', trigger: 'blur'}
+          ],
+           carsalingprice: [
+            {required: true,  pattern: /^\d*\.?\d*$/,message: '只能输入数字', trigger: 'blur'}
+          ],
+           ordertime: [
+            {required: true, message: '', trigger: 'blur'}
+          ],
+           finishtime: [
+            {required: true, message: '', trigger: 'blur'}
+          ],
+          beianpeople: [
+            {required: true, pattern: /^\d+$/, message: '只能输入整数', trigger: 'blur'}
+          ],
+          passedpeople: [
+            {required: true, pattern: /^\d+$/, message: '只能输入整数', trigger: 'blur'}
+          ],
+          finishpeople: [
+            {required: true,pattern: /^\d+$/, message: '只能输入整数', trigger: 'blur'}
+          ],
+          fundsum: [
+            {required: true,pattern: /^\d*\.?\d*$/, message: '只能输入数字', trigger: 'blur'}
           ],
           
         },
@@ -1011,6 +1052,7 @@ import dateClum from "../common/dateClum"
             console.log(this.editForm.city)
           params.ordertime = new Date(this.editForm.ordertime).toUTCString()
           params.finishtime = new Date(this.editForm.finishtime).toUTCString()
+           params.fundUsage = this.fundEfficientFundUsageSelectItems[this.editForm.fundUsage].label;
           this.$http.post(this.$global.remote().kunpengUpdate, params, response => {
                 
                 console.log(response.result)

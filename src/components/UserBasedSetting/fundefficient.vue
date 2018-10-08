@@ -107,7 +107,7 @@
             <el-input v-model="editForm.alreadyLentFundSum" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="当月剩余款项" prop="leftFundSum">
-            <el-input v-model="editForm.leftFundSum" auto-complete="off"></el-input>
+            <el-input @click.native="autofillLeftFundSumEdit" v-model="editForm.leftFundSum" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -477,7 +477,11 @@
     },
     autofillLeftFundSum()
     {
-      this.addForm.leftFundSum = this.addForm.monthlyFundSum - this.addForm.alreadyLentFundSum
+      this.addForm.leftFundSum = (this.addForm.monthlyFundSum - this.addForm.alreadyLentFundSum).toFixed(4)
+    },
+    autofillLeftFundSumEdit()
+    {
+      this.editForm.leftFundSum = (this.editForm.monthlyFundSum - this.editForm.alreadyLentFundSum).toFixed(4)
     },
 
     changeFundUsageItems:function()
