@@ -21,7 +21,7 @@
             <el-button type="primary" v-on:click="handleSearch">查询</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="showAddDialog">新建</el-button>
+            <el-button v-if="this.$global.haveUserPermissionNotRole('/zhideContractDownload/edit')" type="primary" @click="showAddDialog">新建</el-button>
           </el-form-item>
            
         </el-form>
@@ -41,9 +41,9 @@
         <el-table-column prop="filename" label="文件名"></el-table-column>
         <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>
-            <el-button type="danger" @click="delBook(scope.$index,scope.row)" size="small">删除</el-button>
-            <el-button type="small" @click="uploadContract(scope.$index,scope.row)" size="small">上传</el-button>
+            <el-button  v-if="checkPermission('edit')"  @click="showEditDialog(scope.$index,scope.row)"  size="small">编辑</el-button>
+            <el-button  v-if="checkPermission('edit')" type="danger"   @click="delBook(scope.$index,scope.row)" size="small">删除</el-button>
+            <el-button  v-if="checkPermission('edit')" type="small"  @click="uploadContract(scope.$index,scope.row)" size="small">上传</el-button>
             <el-button type="small" @click="exportContract(scope.$index,scope.row)" size="small">下载</el-button>
           </template>
         </el-table-column>
@@ -220,6 +220,14 @@ import config from '../../config.js'
             uploaddialog:uploaddialog
         },
     methods: {
+    checkPermission(type)
+    {
+      if(type === 'edit')
+      {
+        return this.$global.haveUserPermissionNotRole('/zhideContractDownload/edit')
+      }
+      return false;
+    },
     submitUpload(finish) {
        
       

@@ -54,7 +54,7 @@
       <!--工具条-->
       <el-col :span="24" class="toolbar">
        
-        <el-button type="primary" @click="exportExcel('date')" style="float:right">导出Excel</el-button>
+        <el-button v-if="this.$global.haveUserPermissionNotRole('/BussinessStat/excelE')"  type="primary" @click="exportExcel('date')" style="float:right">导出Excel</el-button>
       </el-col>
 
       <el-dialog title="查看细节" :visible.sync ="editFormVisible" :close-on-click-modal="false">

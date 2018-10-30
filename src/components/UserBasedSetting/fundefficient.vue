@@ -67,9 +67,9 @@
                        style="float:center;">
         </el-pagination>
         -->
-        <el-button type="primary" v-on:click="exportExcel('date')" style="float:right;">导出excel</el-button>
+        <el-button  v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/excelE')" type="primary" v-on:click="exportExcel('date')" style="float:right;">导出excel</el-button>
         <el-button v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/excelI')" type="primary" v-on:click="importExcel" style="float:right;position:relative;right:5px">导入excel</el-button>
-        <el-button type="primary" v-on:click="exportExcel('')" style="float:right;right:10px">导出所有excel</el-button>
+        <el-button  v-if="this.$global.haveUserPermissionNotRole('/expenseVelocity/excelE')" type="primary" v-on:click="exportExcel('')" style="float:right;right:10px">导出所有excel</el-button>
         
       </el-col>
 

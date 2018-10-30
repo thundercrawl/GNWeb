@@ -23,19 +23,19 @@
             <el-button type="primary" v-on:click="handleSearch">查询</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" v-on:click="showAddDialog">新建</el-button>
+            <el-button v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/edit')" type="primary" v-on:click="showAddDialog">新建</el-button>
           </el-form-item>
         </el-form>
 
          <el-form :inline="true" :model="filters">  
           <el-form-item>
-            <el-button type="text" @click="showAddDialogCity"> >添加新城市</el-button>
+            <el-button v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/edit')" type="text" @click="showAddDialogCity"> >添加新城市</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="text" @click="showAddDialogCompany"> >添加新公司</el-button>
+            <el-button v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/edit')" type="text" @click="showAddDialogCompany"> >添加新公司</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="text" @click="showAddDialogCartype"> >添加新车型</el-button>
+            <el-button  v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/edit')" type="text" @click="showAddDialogCartype"> >添加新车型</el-button>
           </el-form-item>
           
         </el-form>
@@ -63,8 +63,8 @@
         <el-table-column prop="fundUsage" label="用途" ></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="small" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>
-            <el-button type="danger" size="small" @click="deleteItem(scope.$index,scope.row)">删除</el-button>
+            <el-button v-if="checkPermission('edit')" size="small" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>
+            <el-button v-if="checkPermission('edit')" type="danger" size="small" @click="deleteItem(scope.$index,scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,9 +79,9 @@
         </el-pagination>-->
        
       
-            <el-button type="primary" v-on:click="exportExcel('date')" style="float:right;position:relative">导出excel</el-button>
+            <el-button v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/excelE')" type="primary" v-on:click="exportExcel('date')" style="float:right;position:relative">导出excel</el-button>
             <el-button v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/excelI')"  type="primary"  v-on:click="importExcel" style="float:right;position:relative;right:5px">导入excel</el-button>
-            <el-button type="primary" v-on:click="exportExcel('')" style="float:right;right:30px">导出所有excel</el-button>
+            <el-button v-if="this.$global.haveUserPermissionNotRole('/dingshengBussiness/excelE')" type="primary" v-on:click="exportExcel('')" style="float:right;right:30px">导出所有excel</el-button>
         
         
       
@@ -732,6 +732,14 @@ import dateClum from "../common/dateClum"
            uploaddialog:uploaddialog,
         },
     methods: {
+       checkPermission(type)
+    {
+      if(type === 'edit')
+      {
+        return this.$global.haveUserPermissionNotRole('/dingshengBussiness/edit')
+      }
+      return false;
+    },
       autoFillFundSum(item)
       {
         console.log("auto fill fundsum field")
