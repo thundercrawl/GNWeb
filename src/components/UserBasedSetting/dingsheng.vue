@@ -56,7 +56,7 @@
         <el-table-column prop="investsum" label="融资额" ></el-table-column>
         <el-table-column prop="beianpeople" label="备案人数" ></el-table-column>
         <el-table-column prop="passedpeople" label="过审人数" ></el-table-column>
-      <el-table-column prop="ordertime" label="下单时间" ></el-table-column>
+        <el-table-column prop="ordertime" label="下单时间" ></el-table-column>
         <el-table-column prop="finishtime" label="完成时间" ></el-table-column>
         <el-table-column prop="finishpeople" label="完成人数" ></el-table-column>
         <el-table-column prop="fundsum" label="总融资额" ></el-table-column>

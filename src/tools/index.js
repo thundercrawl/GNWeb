@@ -1,12 +1,12 @@
-export default  {
+export default {
     /**
      * 删除数组元素
      * @param arr
      * @param val
      */
     removeArrayItemByValue: function(arr, val) {
-        for(var i=0; i<arr.length; i++) {
-            if(arr[i] == val) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == val) {
                 arr.splice(i, 1);
                 break;
             }
@@ -17,13 +17,13 @@ export default  {
      * @param str
      * @returns {Boolean}
      */
-    isEmpty : function(str){
-        if(str == null || str == '' || str == undefined || str.length == 0){
+    isEmpty: function(str) {
+        if (str == null || str == '' || str == undefined || str.length == 0) {
             return true;
         }
         return false;
     },
-    isNotEmpty : function(str){
+    isNotEmpty: function(str) {
         return !this.isEmpty(str);
     },
     /**
@@ -31,8 +31,8 @@ export default  {
      * @param number
      * @returns {Boolean}
      */
-    isNumber : function(number){
-        if(isNaN(number)){
+    isNumber: function(number) {
+        if (isNaN(number)) {
             return false;
         }
         return true;
@@ -42,7 +42,7 @@ export default  {
      * @param arr
      * @returns {arg is Array<any>}
      */
-    isArray: function (arr) {
+    isArray: function(arr) {
         return Array.isArray(arr);
     },
     /**
@@ -50,9 +50,9 @@ export default  {
      * @param mobileNo
      * @returns {Boolean}
      */
-    isMobileNo : function(mobileNo){
+    isMobileNo: function(mobileNo) {
         var reg = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|17[07][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
-        if(!reg.test(mobileNo)){
+        if (!reg.test(mobileNo)) {
             return false;
         }
         return true;
@@ -62,9 +62,9 @@ export default  {
      * 验证邮箱
      * @param email
      */
-    isMail : function(email){
+    isMail: function(email) {
         var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
-        if(!reg.test(email)){
+        if (!reg.test(email)) {
             return false;
         }
         return true;
@@ -72,8 +72,8 @@ export default  {
 }
 
 /** trim() method for String */
-String.prototype.trim=function() {
-    return this.replace(/(^\s*)|(\s*$)/g,'');
+String.prototype.trim = function() {
+    return this.replace(/(^\s*)|(\s*$)/g, '');
 };
 
 /**
@@ -86,39 +86,39 @@ function Map() {
  * Map put方法
  */
 Map.prototype.put = function(key, value) {
-    if(this.containsKey(key)){
-        delete this.container[key];
-    }
-    this.container[key] = value;
-}
-/**
- * Map get方法
- */
-Map.prototype.get = function(key) {
-    return this.container[key];
-}
-/**
- * Map key集合
- */
-Map.prototype.keySet = function() {
-    var keyset = new Array();
-    var count = 0;
-    for ( var key in this.container) {
-        // 跳过object的extend函数
-        if (key == 'extend') {
-            continue;
+        if (this.containsKey(key)) {
+            delete this.container[key];
         }
-        keyset[count] = key;
-        count++;
+        this.container[key] = value;
     }
-    return keyset;
-}
-/**
- * Map tostring
- */
+    /**
+     * Map get方法
+     */
+Map.prototype.get = function(key) {
+        return this.container[key];
+    }
+    /**
+     * Map key集合
+     */
+Map.prototype.keySet = function() {
+        var keyset = new Array();
+        var count = 0;
+        for (var key in this.container) {
+            // 跳过object的extend函数
+            if (key == 'extend') {
+                continue;
+            }
+            keyset[count] = key;
+            count++;
+        }
+        return keyset;
+    }
+    /**
+     * Map tostring
+     */
 Map.prototype.size = function() {
     var count = 0;
-    for ( var key in this.container) {
+    for (var key in this.container) {
         // 跳过object的extend函数
         if (key == 'extend') {
             continue;
@@ -132,8 +132,8 @@ Map.prototype.remove = function(key) {
     delete this.container[key];
 }
 
-Map.prototype.clear = function(){
-    for ( var key in this.container) {
+Map.prototype.clear = function() {
+    for (var key in this.container) {
         // 跳过object的extend函数
         if (key == 'extend') {
             continue;
@@ -163,4 +163,3 @@ Map.prototype.toString = function() {
     }
     return str;
 }
-
